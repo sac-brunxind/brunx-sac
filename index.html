@@ -205,4 +205,484 @@
     cursor: pointer;
     transition: all 0.2s;
   }
+  .toggle-btn-group button.selected-sim {
+    background: #166534; border-color: #166534; color: var(--white);
+  }
+  .toggle-btn-group button.selected-nao {
+    background: var(--red); border-color: var(--red); color: var(--white);
+  }
+  .toggle-btn-group button:hover:not(.selected-sim):not(.selected-nao) {
+    border-color: var(--gray-dark); color: var(--black);
+  }
+
+  /* ===== BOTÕES ===== */
+  .btn {
+    padding: 0.65rem 1.5rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary { background: var(--red); color: var(--white); }
+  .btn-primary:hover { background: var(--red-hover); transform: translateY(-1px); }
+  .btn-secondary { background: var(--black); color: var(--white); }
+  .btn-secondary:hover { background: #333; transform: translateY(-1px); }
+  .btn-outline { background: none; border: 1px solid var(--border); color: var(--gray-dark); }
+  .btn-outline:hover { border-color: var(--red); color: var(--red); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+  .form-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ===== ALERTAS ===== */
+  .alert {
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    display: none;
+  }
+  .alert-success { background: #F0FFF4; border: 1px solid #86EFAC; color: #166534; }
+  .alert-error   { background: #FFF0F0; border: 1px solid #FECACA; color: #991B1B; }
+  .alert-warning { background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; }
+
+  /* ===== DASHBOARD ===== */
+  .dashboard-controls {
+    display: flex; flex-wrap: wrap; gap: 0.75rem;
+    align-items: flex-end; margin-bottom: 1.5rem;
+  }
+  .dashboard-controls .form-group { flex: 1; min-width: 140px; }
+  .dashboard-controls .btn { align-self: flex-end; }
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .chart-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.25rem;
+  }
+  .chart-card h3 {
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--gray-mid); margin-bottom: 1rem;
+  }
+
+  /* ===== LOGIN ===== */
+  #loginOverlay {
+    position: fixed; inset: 0;
+    background: var(--gray-light);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999;
+  }
+  #loginOverlay.hidden { display: none; }
+
+  .login-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    padding: 2.5rem 2rem;
+    width: 100%; max-width: 380px;
+  }
+  .login-card .logo-wrap {
+    text-align: center; margin-bottom: 1.75rem;
+    padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);
+  }
+  .login-card .logo-wrap img { height: 36px; }
+  .login-card h2 {
+    font-size: 0.8rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--gray-mid); text-align: center; margin-bottom: 1.5rem;
+  }
+  .login-card form { gap: 1rem; }
+  .login-error {
+    background: #FFF0F0; border: 1px solid #FECACA; color: #991B1B;
+    padding: 0.6rem 0.8rem; border-radius: var(--radius);
+    font-size: 0.82rem; font-weight: 600; text-align: center; display: none;
+  }
+
+  /* ===== LEMBRAR-ME VISUAL ===== */
+  .remember-row {
+    display: flex; align-items: center; gap: 0.6rem;
+    margin-top: 0.25rem; cursor: pointer; user-select: none;
+  }
+  .remember-row input[type="checkbox"] { display: none; }
+  .checkbox-custom {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px; background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .checkbox-custom svg { opacity: 0; transition: opacity 0.15s; }
+  .remember-row.checked .checkbox-custom {
+    background: var(--black); border-color: var(--black);
+  }
+  .remember-row.checked .checkbox-custom svg { opacity: 1; }
+  .remember-label { font-size: 0.8rem; font-weight: 500; color: var(--gray-mid); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--white); border-top: 1px solid var(--border);
+    padding: 0.75rem 2rem; text-align: center;
+    font-size: 0.72rem; color: var(--gray-mid);
+    letter-spacing: 0.05em; flex-shrink: 0;
+  }
+
+  /* ===== RESPONSIVO ===== */
+  @media (max-width: 640px) {
+    main { padding: 1rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .charts-grid { grid-template-columns: 1fr; }
+    nav button { padding: 0.8rem 1rem; font-size: 0.75rem; }
+    header { padding: 0.75rem 1rem; }
+    .card { padding: 1.25rem; }
+    .header-title { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginOverlay">
+  <div class="login-card">
+    <div class="logo-wrap">
+      <img src="LOGO_BRUNX_PNG.png" alt="BRUNX">
+    </div>
+    <h2>Sistema de Atendimento ao Cliente</h2>
+    <form onsubmit="return false;">
+      <div class="form-group">
+        <label for="loginUser">Usuário</label>
+        <input type="text" id="loginUser" placeholder="Digite seu usuário" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="loginPass">Senha</label>
+        <input type="password" id="loginPass" placeholder="Digite sua senha" autocomplete="current-password">
+      </div>
+      <label class="remember-row" id="rememberRow" onclick="toggleLembrar()">
+        <input type="checkbox" id="lembrarMe">
+        <span class="checkbox-custom" id="checkboxVisual">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <polyline points="2,6 5,9 10,3" stroke="white" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="remember-label">Lembrar-me neste dispositivo</span>
+      </label>
+      <div class="login-error" id="loginError"></div>
+      <button type="button" class="btn btn-primary"
+        style="width:100%;margin-top:0.5rem;" onclick="tentarLogin()">
+        Entrar
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <img src="LOGO_BRUNX_PNG.png" alt="BRUNX">
+  <span class="header-title">SAC — Sistema de Atendimento</span>
+  <div class="header-user">
+    Olá, <span id="nomeUsuario">—</span>
+    <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+  </div>
+</header>
+
+<!-- ===== NAV ===== -->
+<nav id="mainNav">
+  <button class="active" onclick="showSection('envio', this)">Envio</button>
+  <button onclick="showSection('reembolso', this)">Reembolso</button>
+  <button onclick="showSection('recebidos', this)">Recebidos</button>
+  <button onclick="showSection('dashboard', this)">Dashboard</button>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<main>
+
+  <!-- ENVIO -->
+  <section id="envio" class="section active">
+    <div class="card">
+      <div class="card-title">Registro de Envio</div>
+      <form id="formEnvio" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Canal de Venda</label>
+            <select id="e_canal">
+              <option value="">Selecione</option>
+              <option>Brunx Varejo</option>
+              <option>Brunx Atacado</option>
+              <option>Liso&Co</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Cliente</label>
+            <input type="text" id="e_cliente" placeholder="Nome do cliente">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="tel" id="e_tel" placeholder="11999999999">
+          </div>
+          <div class="form-group">
+            <label>Número do Pedido</label>
+            <input type="text" id="e_pedido" placeholder="Ex: 123456"
+              onblur="verificarPedidoAoSair(this.value)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo de Falha</label>
+            <select id="e_falha">
+              <option value="">Selecione</option>
+              <option>Erro interno</option>
+              <option>Estoque</option>
+              <option>Logística</option>
+              <option>Qualidade do produto</option>
+              <option>Outros</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Setor Responsável</label>
+            <select id="e_setor">
+              <option value="">Selecione</option>
+              <option>Atendimento</option>
+              <option>Correios</option>
+              <option>Expedição</option>
+              <option>Operacional</option>
+              <option>Produção</option>
+              <option>Revisão</option>
+              <option>Smart Envios</option>
+              <option>Outros</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Solução</label>
+            <select id="e_solucao">
+              <option value="">Selecione</option>
+              <option>Envio</option>
+              <option>Reenvio</option>
+              <option>Reembolso</option>
+              <option>Troca</option>
+              <option>Brinde</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Observação <span class="opcional">(opcional)</span></label>
+            <input type="text" id="e_obs" placeholder="Informações adicionais">
+          </div>
+        </div>
+        <div class="alert alert-warning" id="msgEnvioDupInline">
+          ⚠️ Este número de pedido já está registrado na base ENVIO_BASE. Registro bloqueado.
+        </div>
+        <div class="alert alert-success" id="msgEnvioOk">✔ Registro salvo com sucesso.</div>
+        <div class="alert alert-error"   id="msgEnvioErr"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" onclick="limparEnvio()">Limpar</button>
+          <button type="button" class="btn btn-primary"
+            id="btnRegistrarEnvio" onclick="submitEnvio()">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- REEMBOLSO -->
+  <section id="reembolso" class="section">
+    <div class="card">
+      <div class="card-title">Registro de Reembolso</div>
+      <form id="formReembolso" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cliente</label>
+            <input type="text" id="r_cliente" placeholder="Nome do cliente">
+          </div>
+          <div class="form-group">
+            <label>Loja</label>
+            <select id="r_loja">
+              <option value="">Selecione</option>
+              <option>Brunx Varejo</option>
+              <option>Brunx Atacado</option>
+              <option>Liso&Co</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo de Reembolso</label>
+            <select id="r_tipo">
+              <option value="">Selecione</option>
+              <option>Reembolso total</option>
+              <option>Reembolso parcial</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Valor (R$)</label>
+            <input type="text" id="r_valor" placeholder="123,45">
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Motivo</label>
+          <select id="r_motivo">
+            <option value="">Selecione</option>
+            <option>Erro interno (expedição/produto)</option>
+            <option>Falha de estoque / Item indisponível</option>
+            <option>Falha de sistema / site / preço</option>
+            <option>Insatisfação / arrependimento do cliente</option>
+            <option>Outros / casos especiais</option>
+            <option>Problema de entrega / transportadora</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>NF de Venda</label>
+            <input type="text" id="r_nfVenda">
+          </div>
+          <div class="form-group">
+            <label>NF de Devolução</label>
+            <input type="text" id="r_nfDevol">
+          </div>
+        </div>
+        <div class="alert alert-success" id="msgReembOk">✔ Registro salvo com sucesso.</div>
+        <div class="alert alert-error"   id="msgReembErr"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline"
+            onclick="document.getElementById('formReembolso').reset()">Limpar</button>
+          <button type="button" class="btn btn-primary" onclick="submitReembolso()">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- RECEBIDOS -->
+  <section id="recebidos" class="section">
+    <div class="card">
+      <div class="card-title">Recebidos na Fábrica</div>
+      <form id="formRecebidos" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Responsável pelo Frete</label>
+            <select id="rc_resp">
+              <option value="">Selecione</option>
+              <option>Fábrica</option>
+              <option>Cliente</option>
+              <option>Em processo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Canal de Venda</label>
+            <select id="rc_canal">
+              <option value="">Selecione</option>
+              <option>Brunx Varejo</option>
+              <option>Brunx Atacado</option>
+              <option>Liso&Co</option>
+              <option>Mercado Livre Brunx</option>
+              <option>Mercado Livre VST</option>
+              <option>Mercado Livre Over</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Número do Pedido</label>
+            <input type="text" id="rc_pedido">
+          </div>
+          <div class="form-group">
+            <label>Nome do Cliente</label>
+            <input type="text" id="rc_nome">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="tel" id="rc_tel" placeholder="11999999999">
+          </div>
+          <div class="form-group">
+            <label>Transportadora</label>
+            <select id="rc_transp">
+              <option value="">Selecione</option>
+              <option>PAC / Sedex</option>
+              <option>Loggi</option>
+              <option>Jadlog</option>
+              <option>J&T</option>
+              <option>Buslog</option>
+              <option>Gol</option>
+              <option>Mercado Livre</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Motivo da Troca</label>
+            <select id="rc_motivo">
+              <option value="">Selecione</option>
+              <option>Troca de tamanho</option>
+              <option>Envio errado</option>
+              <option>Peças danificadas</option>
+              <option>Não gostou das peças</option>
+              <option>Problema transportadora</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Recebeu o produto correto?</label>
+            <div class="toggle-btn-group">
+              <button type="button" id="btnSim" onclick="selecionarCorreto('Sim')">Sim</button>
+              <button type="button" id="btnNao" onclick="selecionarCorreto('Não')">Não</button>
+            </div>
+            <input type="hidden" id="rc_correto" value="">
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Peças Recebidas <span class="opcional">(uma por linha)</span></label>
+          <textarea id="rc_pecas" placeholder="Produto 1&#10;Produto 2&#10;Produto 3"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Observação <span class="opcional">(opcional)</span></label>
+          <textarea id="rc_obs" placeholder="Informações adicionais"></textarea>
+        </div>
+        <div class="alert alert-success" id="msgRecebOk">✔ Registro salvo com sucesso.</div>
+        <div class="alert alert-error"   id="msgRecebErr"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" onclick="limparRecebidos()">Limpar</button>
+          <button type="button" class="btn btn-primary" onclick="submitRecebidos()">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="section">
+    <div class="card">
+      <div class="card-title">Filtros</div>
+      <div class="dashboard-controls">
+        <div class="form-group">
+          <label>Base</label>
+          <select id="filterBase">
+            <option value="todas">Todas</option>
+            <option value="envio">Envio</option>
+            <option value="reembolso">Reembolso</option>
+            <option value="recebidos">Recebidos</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Data inicial</label>
+          <input type="date" id="dateStart">
+        </div>
+        <div class="form-group">
+          <label>Data final</label>
+          <input type="date" id="dateEnd">
+        </div>
+        <button
 
