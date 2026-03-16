@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>BRUNX – SAC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --primary:#800000;   /* vermelho escuro */
+    --bg:#111;           /* preto quase total */
+    --light:#fff;
+  }
+  body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:linear-gradient(135deg,var(--bg),#222);
+    color:var(--light);
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+  }
+  header{
+    text-align:center;
+    padding:1rem;
+    background:linear-gradient(90deg,var(--primary),#b30000);
+  }
+  header img{
+    max-width:180px;
+    height:auto;
+  }
+  .menu{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:1rem;
+    padding:1rem;
+  }
+  .menu button{
+    padding:0.8rem 1rem;
+    font-size:1rem;
+    border:none;
+    border-radius:8px;
+    background:var(--primary);
+    color:#fff;
+    cursor:pointer;
+    transition:background .3s,transform .2s;
+  }
+  .menu button:hover{
+    background:#a30000;
+    transform:scale(1.03);
+  }
+  .section{
+    display:none;
+    padding:1rem;
+    max-width:900px;
+    margin:auto;
+  }
+  .section.active{display:block;}
+  form{display:grid;gap:0.8rem;}
+  label{font-weight:bold;}
+  input,select,textarea{
+    width:100%;
+    padding:0.5rem;
+    border-radius:6px;
+    border:none;
+    background:#333;
+    color:#fff;
+  }
+  textarea{resize:vertical;height:80px;}
+  .toggle{
+    display:flex;align-items:center;gap:.5rem;
+  }
+  .toggle input{width:auto;}
+  .btn-submit{
+    background:#006400;
+    margin-top:1rem;
+  }
+  .btn-submit:hover{background:#008000;}
+  .alert{background:#800000;color:#fff;padding:.5rem;border-radius:6px;margin-top:.5rem;}
+  .dashboard{
+    margin-top:2rem;
+  }
+  .chart-container{margin-bottom:2rem;}
+  @media(max-width:600px){
+    header img{max-width:120px;}
+    .menu{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="LOGO_BRUNX_PNG.png" alt="BRUNX">
+</header>
+
+<div class="menu">
+  <button onclick="showSection('envio')">Envio</button>
+  <button onclick="showSection('reembolso')">Reembolso</button>
+  <button onclick="showSection('recebidos')">Recebidos na Fábrica</button>
+  <button onclick="showSection('dashboard')">Dashboard</button>
+</div>
+
+<!-- ==================== SEÇÃO ENVIO ==================== -->
+<section id="envio" class="section">
+  <h2>Registro de Envio</h2>
+  <form id="formEnvio">
+    <label>Canal de venda</label>
+    <select name="canalVenda" required>
+      <option value="">Selecione</option>
+      <option>Brunx Varejo</option>
+      <option>Brunx Atacado</option>
+      <option>Liso&Co</option>
+    </select>
+
+    <label>Cliente</label>
+    <input type="text" name="cliente" required>
+
+    <label>Telefone (DDD)</label>
+    <input type="tel" name="telefone" pattern="\\d{2,3}\\d{8,9}" placeholder="11999999999" required>
+
+    <label>Número do pedido</label>
+    <input type="text" name="numPedido" required>
+
+    <label>Tipo de falha</label>
+    <select name="tipoFalha" required>
+      <option value="">Selecione</option>
+      <option>Erro interno</option>
+      <option>Estoque</option>
+      <option>Logística</option>
+      <option>Qualidade do produto</option>
+      <option>Outros</option>
+    </select>
+
+    <label>Setor responsável</label>
+    <select name="setorResp" required>
+      <option value="">Selecione</option>
+      <option>Atendimento</option>
+      <option>Correios</option>
+      <option>Expedição</option>
+      <option>Operacional</option>
+      <option>Produção</option>
+      <option>Revisão</option>
+      <option>Smart Envios</option>
+      <option>Outros</option>
+    </select>
+
+    <label>Solução</label>
+    <select name="solucao" required>
+      <option value="">Selecione</option>
+      <option>Envio</option>
+      <option>Reenvio</option>
+      <option>Reembolso</option>
+      <option>Troca</option>
+      <option>Brinde</option>
+    </select>
+
+    <label>Observação (opcional)</label>
+    <textarea name="observacao"></textarea>
+
+    <button type="submit" class="btn-submit">Registrar</button>
+    <div id="msgEnvio" class="alert" style="display:none;"></div>
+  </form>
+</section>
+
+<!-- ==================== SEÇÃO REEMBOLSO ==================== -->
+<section id="reembolso" class="section">
+  <h2>Registro de Reembolso</h2>
+  <form id="formReembolso">
+    <label>Cliente</label>
+    <input type="text" name="cliente" required>
+
+    <label>Loja</label>
+    <select name="loja" required>
+      <option value="">Selecione</option>
+      <option>Brunx Varejo</option>
+      <option>Brunx Atacado</option>
+      <option>Liso&Co</option>
+    </select>
+
+    <label>Total ou Parcial</label>
+    <select name="tipoReembolso" required>
+      <option value="">Selecione</option>
+      <option>Reembolso total</option>
+      <option>Reembolso parcial</option>
+    </select>
+
+    <label>Valor (R$)</label>
+    <input type="text" name="valor" pattern="^[0-9.,]+$" placeholder="123,45" required>
+
+    <label>Motivo</label>
+    <select name="motivo" required>
+      <option value="">Selecione</option>
+      <option>Erro interno (expedição/produto)</option>
+      <option>Falha de estoque/ Item indisponível</option>
+      <option>Falha de sistema / site/ preço</option>
+      <option>Insatisfação/arrependimento do cliente</option>
+      <option>Outros/casos especiais</option>
+      <option>Problema de entrega/transportadora</option>
+    </select>
+
+    <label>NF de Venda</label>
+    <input type="text" name="nfVenda" required>
+
+    <label>NF de Devolução</label>
+    <input type="text" name="nfDevolucao" required>
+
+    <button type="submit" class="btn-submit">Registrar</button>
+    <div id="msgReembolso" class="alert" style="display:none;"></div>
+  </form>
+</section>
+
+<!-- ==================== SEÇÃO RECEBIDOS ==================== -->
+<section id="recebidos" class="section">
+  <h2>Recebidos na Fábrica</h2>
+  <form id="formRecebidos">
+    <label>Responsável</label>
+    <select name="responsavel" required>
+      <option value="">Selecione</option>
+      <option>Fábrica</option>
+      <option>Cliente</option>
+    </select>
+
+    <label>Canal de venda</label>
+    <select name="canalVenda" required>
+      <option value="">Selecione</option>
+      <option>Brunx Varejo</option>
+      <option>Brunx Atacado</option>
+      <option>Liso&Co</option>
+      <option>Mercado Livre Brunx</option>
+      <option>Mercado Livre VST</option>
+      <option>Mercado Livre Over</option>
+    </select>
+
+    <label>Número do pedido</label>
+    <input type="text" name="numPedido" required>
+
+    <label>Nome do Cliente</label>
+    <input type="text" name="nomeCliente" required>
+
+    <label>Telefone (DDD)</label>
+    <input type="tel" name="telefone" pattern="\\d{2,3}\\d{8,9}" placeholder="11999999999" required>
+
+    <label>Transportadora</label>
+    <select name="transportadora" required>
+      <option value="">Selecione</option>
+      <option>PAC. Sedex</option>
+      <option>Loggi</option>
+      <option>Jadlog</option>
+      <option>J&T</option>
+      <option>Buslog</option>
+      <option>Gol</option>
+      <option>Mercado Livre</option>
+    </select>
+
+    <label>Motivo da troca</label>
+    <select name="motivoTroca" required>
+      <option value="">Selecione</option>
+      <option>Troca de tamanho</option>
+      <option>Envio errado</option>
+      <option>Peças Danificadas</option>
+      <option>Não gostou das peças</option>
+      <option>Problema transportadora</option>
+    </select>
+
+    <label>Recebeu o produto correto?</label>
+    <div class="toggle">
+      <input type="radio" name="produtoCorreto" value="Sim" required> Sim
+      <input type="radio" name="produtoCorreto" value="Não"> Não
+    </div>
+
+    <label>Peças recebidas (um por linha)</label>
+    <textarea name="produtosRecebidos" placeholder="Produto 1&#10;Produto 2" required></textarea>
+
+    <label>Observação (opcional)</label>
+    <textarea name="observacao"></textarea>
+
+    <button type="submit" class="btn-submit">Registrar</button>
+    <div id="msgRecebidos" class="alert" style="display:none;"></div>
+  </form>
+</section>
+
+<!-- ==================== SEÇÃO DASHBOARD ==================== -->
+<section id="dashboard" class="section">
+  <h2>Dashboard Interativo</h2>
+
+  <div class="dashboard-controls">
+    <label>Filtrar por base:</label>
+    <select id="filterBase">
+      <option value="todas">Todas</option>
+      <option value="envio">Envio</option>
+      <option value="reembolso">Reembolso</option>
+      <option value="recebidos">Recebidos</option>
+    </select>
+
+    <label>Período:</label>
+    <input type="date" id="dateStart">
+    <input type="date" id="dateEnd">
+
+    <button id="btnAtualizar" class="btn-submit">Atualizar</button>
+    <button id="btnExportar" class="btn-submit">Exportar PDF</button>
+  </div>
+
+  <div id="chartsContainer" class="chart-container">
+    <!-- Gráficos serão inseridos aqui via Google Charts -->
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/google-charts/49.0.1/jsapi.min.js"></script>
+<script>
+/* ---------- UTILIDADES ---------- */
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ---------- AUTENTICAÇÃO ---------- */
+async function login(username,password){
+  // chama Apps Script que verifica hash da senha
+  const url = 'https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec';
+  const resp = await fetch(url+'?action=login&user='+encodeURIComponent(username)+'&pass='+encodeURIComponent(password));
+  const data = await resp.json();
+  return data; // {ok:true, perfil:"operador", nome:"Bruno"}
+}
+
+/* ---------- FUNÇÕES DE VALIDAÇÃO ---------- */
+function showMsg(elem,msg){
+  elem.style.display='block';
+  elem.textContent=msg;
+  setTimeout(()=>{elem.style.display='none';},4000);
+}
+
+/* ---------- ENVIO ---------- */
+document.getElementById('formEnvio').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const f = e.target;
+  const payload = {
+    action:'addEnvio',
+    canalVenda:f.canalVenda.value,
+    cliente:f.cliente.value,
+    telefone:f.telefone.value,
+    numPedido:f.numPedido.value,
+    tipoFalha:f.tipoFalha.value,
+    setorResp:f.setorResp.value,
+    solucao:f.solucao.value,
+    observacao:f.observacao.value
+  };
+  // checagem de duplicidade de número de pedido
+  const dup = await fetch(`https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec?action=checkPedido&num=${encodeURIComponent(payload.numPedido)}`);
+  const dupData = await dup.json();
+  if(dupData.exists){
+    if(!confirm('Já existe um registro com este número de pedido. Deseja continuar?')){
+      return;
+    }
+  }
+  const resp = await fetch(`https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec`,{
+    method:'POST',
+    body:JSON.stringify(payload)
+  });
+  const result = await resp.json();
+  if(result.ok){
+    showMsg(document.getElementById('msgEnvio'),'Registrado com sucesso!');
+    f.reset();
+  }else{
+    showMsg(document.getElementById('msgEnvio'),'Erro: '+result.error);
+  }
+});
+
+/* ---------- REEMBOLSO ---------- */
+document.getElementById('formReembolso').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const f=e.target;
+  const payload={action:'addReembolso',
+    cliente:f.cliente.value,
+    loja:f.loja.value,
+    tipoReembolso:f.tipoReembolso.value,
+    valor:f.valor.value.replace(/[^\d.,]/g,''), // limpa caracteres indesejados
+    motivo:f.motivo.value,
+    nfVenda:f.nfVenda.value,
+    nfDevolucao:f.nfDevolucao.value
+  };
+  // validação de NF duplicada
+  const nfResp = await fetch(`https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec?action=checkNF&nfVenda=${encodeURIComponent(payload.nfVenda)}&nfDevol=${encodeURIComponent(payload.nfDevolucao)}`);
+  const nfData = await nfResp.json();
+  if(nfData.dupVenda || nfData.dupDevol){
+    let msg='Existem duplicidades:\n';
+    if(nfData.dupVenda) msg+='✗ NF de Venda\n';
+    if(nfData.dupDevol) msg+='✗ NF de Devolução\n';
+    alert(msg);
+    return;
+  }
+  const resp = await fetch(`https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec`,{
+    method:'POST',
+    body:JSON.stringify(payload)
+  });
+  const result = await resp.json();
+  if(result.ok){
+    showMsg(document.getElementById('msgReembolso'),'Registrado com sucesso!');
+    f.reset();
+  }else{
+    showMsg(document.getElementById('msgReembolso'),'Erro: '+result.error);
+  }
+});
+
+/* ---------- RECEBIDOS ---------- */
+document.getElementById('formRecebidos').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const f=e.target;
+  const payload={action:'addRecebidos',
+    responsavel:f.responsavel.value,
+    canalVenda:f.canalVenda.value,
+    numPedido:f.numPedido.value,
+    nomeCliente:f.nomeCliente.value,
+    telefone:f.telefone.value,
+    transportadora:f.transportadora.value,
+    motivoTroca:f.motivoTroca.value,
+    produtoCorreto:f.produtoCorreto.value,
+    produtosRecebidos:f.produtosRecebidos.value,
+    observacao:f.observacao.value
+  };
+  const resp = await fetch(`https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec`,{
+    method:'POST',
+    body:JSON.stringify(payload)
+  });
+  const result = await resp.json();
+  if(result.ok){
+    showMsg(document.getElementById('msgRecebidos'),'Registrado com sucesso!');
+    f.reset();
+  }else{
+    showMsg(document.getElementById('msgRecebidos'),'Erro: '+result.error);
+  }
+});
+
+/* ---------- DASHBOARD ---------- */
+google.charts.load('current',{'packages':['corechart','table']});
+google.charts.setOnLoadCallback(inicializarDashboard);
+
+function inicializarDashboard(){
+  document.getElementById('btnAtualizar').addEventListener('click',carregarDados);
+  document.getElementById('btnExportar').addEventListener('click',exportarPDF);
+  // carrega ao abrir a página
+  carregarDados();
+}
+
+async function carregarDados(){
+  const base = document.getElementById('filterBase').value;
+  const start = document.getElementById('dateStart').value;
+  const end   = document.getElementById('dateEnd').value;
+  const url = `https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec?action=getDashboard&base=${base}&start=${start}&end=${end}`;
+  const resp = await fetch(url);
+  const data = await resp.json(); // {envio:[], reembolso:[], recebidos:[]}
+  desenharGraficos(data);
+}
+
+function desenharGraficos(data){
+  const container = document.getElementById('chartsContainer');
+  container.innerHTML=''; // limpa
+
+  // Exemplo: gráfico pizza de canais (agrupa todas as bases)
+  const tabela = new google.visualization.DataTable();
+  tabela.addColumn('string','Canal');
+  tabela.addColumn('number','Quantidade');
+
+  const contagem = {};
+  ['envio','reembolso','recebidos'].forEach(k=>{
+    data[k].forEach(r=>{ 
+      const canal = r.CANAL_VENDA || r.CANAL;
+      contagem[canal]=(contagem[canal]||0)+1;
+    });
+  });
+  for(const c in contagem){
+    tabela.addRow([c,contagem[c]]);
+  }
+
+  const chart = new google.visualization.PieChart(container);
+  chart.draw(tabela,{title:'Distribuição por Canal',width:'100%',height:400,backgroundColor:'transparent'});
+}
+
+/* ---------- EXPORTAR PDF ---------- */
+function exportarPDF(){
+  // Usa html2canvas + jsPDF (bibliotecas CDN)
+  const script1 = document.createElement('script');
+  script1.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+  script1.onload=()=>{ 
+    const script2=document.createElement('script');
+    script2.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    script2.onload=()=>{ gerarPDF(); };
+    document.body.appendChild(script2);
+  };
+  document.body.appendChild(script1);
+}
+
+async function gerarPDF(){
+  const {jsPDF}=window.jspdf;
+  const canvas = await html2canvas(document.getElementById('chartsContainer'));
+  const imgData = canvas.toDataURL('image/png');
+  const pdf = new jsPDF('p','mm','a4');
+  const imgProps = pdf.getImageProperties(imgData);
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  pdf.addImage(imgData,'PNG',0,0,pdfWidth,pdfHeight);
+  pdf.save('dashboard.pdf');
+}
+
+/* ---------- HASH DE SENHA (client‑side) ---------- */
+// Utiliza SubtleCrypto para gerar SHA‑256
+async function hashPassword(pwd){
+  const enc = new TextEncoder();
+  const data = enc.encode(pwd);
+  const hash = await crypto.subtle.digest('SHA-256',data);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+/* ---------- LOGIN SIMPLE (modal) ---------- */
+function solicitarLogin(){
+  const user = prompt('Usuário:');
+  const pass = prompt('Senha:');
+  if(!user||!pass) return false;
+  hashPassword(pass).then(hash=>{
+    login(user,hash).then(resp=>{
+      if(resp.ok){
+        alert('Login OK – perfil: '+resp.perfil);
+        // guarda em sessionStorage para usar nas gravações
+        sessionStorage.setItem('user',user);
+        sessionStorage.setItem('perfil',resp.perfil);
+      }else{
+        alert('Login falhou');
+        location.reload();
+      }
+    });
+  });
+  return true;
+}
+
+// Ao abrir a aplicação, força login
+if(!sessionStorage.getItem('user')){
+  solicitarLogin();
+}
+</script>
+</body>
+</html>
