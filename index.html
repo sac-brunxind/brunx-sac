@@ -5,21 +5,20 @@
 <title>BRUNX – SAC</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  /* ==================== RESET & VARIÁVEIS ==================== */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --red:     #AA0000;
+    --red:       #AA0000;
     --red-hover: #880000;
-    --black:   #111111;
+    --black:     #111111;
     --gray-dark: #333333;
     --gray-mid:  #666666;
     --gray-light:#F4F4F4;
-    --white:   #FFFFFF;
-    --border:  #DDDDDD;
-    --shadow:  0 2px 12px rgba(0,0,0,0.08);
-    --radius:  6px;
-    --font:    'Segoe UI', Arial, sans-serif;
+    --white:     #FFFFFF;
+    --border:    #DDDDDD;
+    --shadow:    0 2px 12px rgba(0,0,0,0.08);
+    --radius:    6px;
+    --font:      'Segoe UI', Arial, sans-serif;
   }
 
   body {
@@ -31,7 +30,6 @@
     flex-direction: column;
   }
 
-  /* ==================== HEADER ==================== */
   header {
     background: var(--white);
     border-bottom: 3px solid var(--red);
@@ -42,10 +40,7 @@
     box-shadow: var(--shadow);
   }
 
-  header img {
-    height: 42px;
-    width: auto;
-  }
+  header img { height: 42px; width: auto; }
 
   .header-title {
     font-size: 0.75rem;
@@ -63,10 +58,7 @@
     gap: 0.5rem;
   }
 
-  .header-user span {
-    font-weight: 700;
-    color: var(--black);
-  }
+  .header-user span { font-weight: 700; color: var(--black); }
 
   .btn-logout {
     background: none;
@@ -79,17 +71,12 @@
     transition: all 0.2s;
   }
 
-  .btn-logout:hover {
-    border-color: var(--red);
-    color: var(--red);
-  }
+  .btn-logout:hover { border-color: var(--red); color: var(--red); }
 
-  /* ==================== NAVEGAÇÃO ==================== */
   nav {
     background: var(--white);
     border-bottom: 1px solid var(--border);
     display: flex;
-    gap: 0;
     padding: 0 2rem;
     overflow-x: auto;
   }
@@ -109,17 +96,9 @@
     white-space: nowrap;
   }
 
-  nav button:hover {
-    color: var(--black);
-    border-bottom-color: var(--border);
-  }
+  nav button:hover { color: var(--black); border-bottom-color: var(--border); }
+  nav button.active { color: var(--red); border-bottom-color: var(--red); }
 
-  nav button.active {
-    color: var(--red);
-    border-bottom-color: var(--red);
-  }
-
-  /* ==================== CONTEÚDO PRINCIPAL ==================== */
   main {
     flex: 1;
     padding: 2rem;
@@ -131,7 +110,6 @@
   .section { display: none; }
   .section.active { display: block; }
 
-  /* ==================== CARD ==================== */
   .card {
     background: var(--white);
     border: 1px solid var(--border);
@@ -164,11 +142,7 @@
     border-radius: 2px;
   }
 
-  /* ==================== FORMULÁRIOS ==================== */
-  form {
-    display: grid;
-    gap: 1.2rem;
-  }
+  form { display: grid; gap: 1.2rem; }
 
   .form-row {
     display: grid;
@@ -176,15 +150,8 @@
     gap: 1rem;
   }
 
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
-  .form-group.full {
-    grid-column: 1 / -1;
-  }
+  .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+  .form-group.full { grid-column: 1 / -1; }
 
   label {
     font-size: 0.78rem;
@@ -229,17 +196,9 @@
     box-shadow: 0 0 0 3px rgba(170,0,0,0.08);
   }
 
-  textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
+  textarea { resize: vertical; min-height: 80px; }
 
-  /* Radio toggle estilizado */
-  .toggle-group {
-    display: flex;
-    gap: 1rem;
-    padding: 0.4rem 0;
-  }
+  .toggle-group { display: flex; gap: 1rem; padding: 0.4rem 0; }
 
   .toggle-group label {
     display: flex;
@@ -260,817 +219,8 @@
     cursor: pointer;
   }
 
-  /* ==================== BOTÕES ==================== */
   .btn {
     padding: 0.65rem 1.5rem;
     border: none;
-    border-radius: var(--radius);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-  }
+    border-radius
 
-  .btn-primary {
-    background: var(--red);
-    color: var(--white);
-  }
-
-  .btn-primary:hover {
-    background: var(--red-hover);
-    transform: translateY(-1px);
-  }
-
-  .btn-secondary {
-    background: var(--black);
-    color: var(--white);
-  }
-
-  .btn-secondary:hover {
-    background: #333;
-    transform: translateY(-1px);
-  }
-
-  .btn-outline {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--gray-dark);
-  }
-
-  .btn-outline:hover {
-    border-color: var(--red);
-    color: var(--red);
-  }
-
-  .form-actions {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-    margin-top: 0.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-  }
-
-  /* ==================== ALERTAS ==================== */
-  .alert {
-    padding: 0.7rem 1rem;
-    border-radius: var(--radius);
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-top: 0.5rem;
-    display: none;
-  }
-
-  .alert-success {
-    background: #F0FFF4;
-    border: 1px solid #86EFAC;
-    color: #166534;
-  }
-
-  .alert-error {
-    background: #FFF0F0;
-    border: 1px solid #FECACA;
-    color: #991B1B;
-  }
-
-  /* ==================== DASHBOARD ==================== */
-  .dashboard-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    align-items: flex-end;
-    margin-bottom: 1.5rem;
-  }
-
-  .dashboard-controls .form-group {
-    flex: 1;
-    min-width: 140px;
-  }
-
-  .dashboard-controls .btn {
-    align-self: flex-end;
-  }
-
-  .charts-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-  }
-
-  .chart-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 1.25rem;
-  }
-
-  .chart-card h3 {
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gray-mid);
-    margin-bottom: 1rem;
-  }
-
-  /* ==================== LOGIN MODAL ==================== */
-  #loginOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.55);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-  }
-
-  .login-card {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    padding: 2.5rem 2rem;
-    width: 100%;
-    max-width: 380px;
-  }
-
-  .login-card .logo-wrap {
-    text-align: center;
-    margin-bottom: 1.75rem;
-  }
-
-  .login-card .logo-wrap img {
-    height: 36px;
-  }
-
-  .login-card h2 {
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gray-mid);
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-
-  .login-card form {
-    gap: 1rem;
-  }
-
-  .login-error {
-    background: #FFF0F0;
-    border: 1px solid #FECACA;
-    color: #991B1B;
-    padding: 0.6rem 0.8rem;
-    border-radius: var(--radius);
-    font-size: 0.82rem;
-    font-weight: 600;
-    text-align: center;
-    display: none;
-  }
-
-  /* ==================== FOOTER ==================== */
-  footer {
-    background: var(--white);
-    border-top: 1px solid var(--border);
-    padding: 0.75rem 2rem;
-    text-align: center;
-    font-size: 0.72rem;
-    color: var(--gray-mid);
-    letter-spacing: 0.05em;
-  }
-
-  /* ==================== RESPONSIVO ==================== */
-  @media (max-width: 640px) {
-    main { padding: 1rem; }
-    .form-row { grid-template-columns: 1fr; }
-    .charts-grid { grid-template-columns: 1fr; }
-    nav button { padding: 0.8rem 1rem; font-size: 0.75rem; }
-    header { padding: 0.75rem 1rem; }
-    .card { padding: 1.25rem; }
-  }
-</style>
-</head>
-<body>
-
-<!-- ==================== LOGIN OVERLAY ==================== -->
-<div id="loginOverlay">
-  <div class="login-card">
-    <div class="logo-wrap">
-      <img src="LOGO_BRUNX_PNG.png" alt="BRUNX">
-    </div>
-    <h2>Sistema de Atendimento ao Cliente</h2>
-    <form id="formLogin" onsubmit="return false;">
-      <div class="form-group">
-        <label for="loginUser">Usuário</label>
-        <input type="text" id="loginUser" placeholder="Digite seu usuário" autocomplete="username">
-      </div>
-      <div class="form-group">
-        <label for="loginPass">Senha</label>
-        <input type="password" id="loginPass" placeholder="Digite sua senha" autocomplete="current-password">
-      </div>
-      <div class="login-error" id="loginError">Usuário ou senha incorretos.</div>
-      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem;" onclick="tentarLogin()">Entrar</button>
-    </form>
-  </div>
-</div>
-
-<!-- ==================== HEADER ==================== -->
-<header>
-  <img src="LOGO_BRUNX_PNG.png" alt="BRUNX">
-  <span class="header-title">SAC — Sistema de Atendimento</span>
-  <div class="header-user">
-    Olá, <span id="nomeUsuario">—</span>
-    <button class="btn-logout" onclick="fazerLogout()">Sair</button>
-  </div>
-</header>
-
-<!-- ==================== NAV ==================== -->
-<nav>
-  <button class="active" onclick="showSection('envio', this)">Envio</button>
-  <button onclick="showSection('reembolso', this)">Reembolso</button>
-  <button onclick="showSection('recebidos', this)">Recebidos</button>
-  <button onclick="showSection('dashboard', this)">Dashboard</button>
-</nav>
-
-<!-- ==================== MAIN ==================== -->
-<main>
-
-  <!-- ENVIO -->
-  <section id="envio" class="section active">
-    <div class="card">
-      <div class="card-title">Registro de Envio</div>
-      <form id="formEnvio" onsubmit="return false;">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="e_canal">Canal de Venda</label>
-            <select id="e_canal" required>
-              <option value="">Selecione</option>
-              <option>Brunx Varejo</option>
-              <option>Brunx Atacado</option>
-              <option>Liso&Co</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="e_cliente">Cliente</label>
-            <input type="text" id="e_cliente" placeholder="Nome do cliente" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="e_tel">Telefone</label>
-            <input type="tel" id="e_tel" placeholder="11999999999" required>
-          </div>
-          <div class="form-group">
-            <label for="e_pedido">Número do Pedido</label>
-            <input type="text" id="e_pedido" placeholder="Ex: 123456" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="e_falha">Tipo de Falha</label>
-            <select id="e_falha" required>
-              <option value="">Selecione</option>
-              <option>Erro interno</option>
-              <option>Estoque</option>
-              <option>Logística</option>
-              <option>Qualidade do produto</option>
-              <option>Outros</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="e_setor">Setor Responsável</label>
-            <select id="e_setor" required>
-              <option value="">Selecione</option>
-              <option>Atendimento</option>
-              <option>Correios</option>
-              <option>Expedição</option>
-              <option>Operacional</option>
-              <option>Produção</option>
-              <option>Revisão</option>
-              <option>Smart Envios</option>
-              <option>Outros</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="e_solucao">Solução</label>
-            <select id="e_solucao" required>
-              <option value="">Selecione</option>
-              <option>Envio</option>
-              <option>Reenvio</option>
-              <option>Reembolso</option>
-              <option>Troca</option>
-              <option>Brinde</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="e_obs">Observação <span class="opcional">(opcional)</span></label>
-            <input type="text" id="e_obs" placeholder="Informações adicionais">
-          </div>
-        </div>
-        <div class="alert alert-success" id="msgEnvioOk">Registro salvo com sucesso.</div>
-        <div class="alert alert-error"   id="msgEnvioErr"></div>
-        <div class="form-actions">
-          <button type="button" class="btn btn-outline" onclick="limparForm('formEnvio')">Limpar</button>
-          <button type="button" class="btn btn-primary" onclick="submitEnvio()">Registrar</button>
-        </div>
-      </form>
-    </div>
-  </section>
-
-  <!-- REEMBOLSO -->
-  <section id="reembolso" class="section">
-    <div class="card">
-      <div class="card-title">Registro de Reembolso</div>
-      <form id="formReembolso" onsubmit="return false;">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="r_cliente">Cliente</label>
-            <input type="text" id="r_cliente" placeholder="Nome do cliente" required>
-          </div>
-          <div class="form-group">
-            <label for="r_loja">Loja</label>
-            <select id="r_loja" required>
-              <option value="">Selecione</option>
-              <option>Brunx Varejo</option>
-              <option>Brunx Atacado</option>
-              <option>Liso&Co</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="r_tipo">Tipo de Reembolso</label>
-            <select id="r_tipo" required>
-              <option value="">Selecione</option>
-              <option>Reembolso total</option>
-              <option>Reembolso parcial</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="r_valor">Valor (R$)</label>
-            <input type="text" id="r_valor" placeholder="123,45" required>
-          </div>
-        </div>
-        <div class="form-group full">
-          <label for="r_motivo">Motivo</label>
-          <select id="r_motivo" required>
-            <option value="">Selecione</option>
-            <option>Erro interno (expedição/produto)</option>
-            <option>Falha de estoque / Item indisponível</option>
-            <option>Falha de sistema / site / preço</option>
-            <option>Insatisfação / arrependimento do cliente</option>
-            <option>Outros / casos especiais</option>
-            <option>Problema de entrega / transportadora</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="r_nfVenda">NF de Venda</label>
-            <input type="text" id="r_nfVenda" required>
-          </div>
-          <div class="form-group">
-            <label for="r_nfDevol">NF de Devolução</label>
-            <input type="text" id="r_nfDevol" required>
-          </div>
-        </div>
-        <div class="alert alert-success" id="msgReembOk">Registro salvo com sucesso.</div>
-        <div class="alert alert-error"   id="msgReembErr"></div>
-        <div class="form-actions">
-          <button type="button" class="btn btn-outline" onclick="limparForm('formReembolso')">Limpar</button>
-          <button type="button" class="btn btn-primary" onclick="submitReembolso()">Registrar</button>
-        </div>
-      </form>
-    </div>
-  </section>
-
-  <!-- RECEBIDOS -->
-  <section id="recebidos" class="section">
-    <div class="card">
-      <div class="card-title">Recebidos na Fábrica</div>
-      <form id="formRecebidos" onsubmit="return false;">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="rc_resp">Responsável pelo Frete</label>
-            <select id="rc_resp" required>
-              <option value="">Selecione</option>
-              <option>Fábrica</option>
-              <option>Cliente</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="rc_canal">Canal de Venda</label>
-            <select id="rc_canal" required>
-              <option value="">Selecione</option>
-              <option>Brunx Varejo</option>
-              <option>Brunx Atacado</option>
-              <option>Liso&Co</option>
-              <option>Mercado Livre Brunx</option>
-              <option>Mercado Livre VST</option>
-              <option>Mercado Livre Over</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="rc_pedido">Número do Pedido</label>
-            <input type="text" id="rc_pedido" required>
-          </div>
-          <div class="form-group">
-            <label for="rc_nome">Nome do Cliente</label>
-            <input type="text" id="rc_nome" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="rc_tel">Telefone</label>
-            <input type="tel" id="rc_tel" placeholder="11999999999" required>
-          </div>
-          <div class="form-group">
-            <label for="rc_transp">Transportadora</label>
-            <select id="rc_transp" required>
-              <option value="">Selecione</option>
-              <option>PAC / Sedex</option>
-              <option>Loggi</option>
-              <option>Jadlog</option>
-              <option>J&T</option>
-              <option>Buslog</option>
-              <option>Gol</option>
-              <option>Mercado Livre</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="rc_motivo">Motivo da Troca</label>
-            <select id="rc_motivo" required>
-              <option value="">Selecione</option>
-              <option>Troca de tamanho</option>
-              <option>Envio errado</option>
-              <option>Peças danificadas</option>
-              <option>Não gostou das peças</option>
-              <option>Problema transportadora</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Recebeu o produto correto?</label>
-            <div class="toggle-group">
-              <label><input type="radio" name="rc_correto" value="Sim" required> Sim</label>
-              <label><input type="radio" name="rc_correto" value="Não"> Não</label>
-            </div>
-          </div>
-        </div>
-        <div class="form-group full">
-          <label for="rc_pecas">Peças Recebidas <span class="opcional">(uma por linha)</span></label>
-          <textarea id="rc_pecas" placeholder="Produto 1&#10;Produto 2&#10;Produto 3" required></textarea>
-        </div>
-        <div class="form-group full">
-          <label for="rc_obs">Observação <span class="opcional">(opcional)</span></label>
-          <textarea id="rc_obs" placeholder="Informações adicionais"></textarea>
-        </div>
-        <div class="alert alert-success" id="msgRecebOk">Registro salvo com sucesso.</div>
-        <div class="alert alert-error"   id="msgRecebErr"></div>
-        <div class="form-actions">
-          <button type="button" class="btn btn-outline" onclick="limparForm('formRecebidos')">Limpar</button>
-          <button type="button" class="btn btn-primary" onclick="submitRecebidos()">Registrar</button>
-        </div>
-      </form>
-    </div>
-  </section>
-
-  <!-- DASHBOARD -->
-  <section id="dashboard" class="section">
-    <div class="card">
-      <div class="card-title">Filtros</div>
-      <div class="dashboard-controls">
-        <div class="form-group">
-          <label>Base</label>
-          <select id="filterBase">
-            <option value="todas">Todas</option>
-            <option value="envio">Envio</option>
-            <option value="reembolso">Reembolso</option>
-            <option value="recebidos">Recebidos</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Data inicial</label>
-          <input type="date" id="dateStart">
-        </div>
-        <div class="form-group">
-          <label>Data final</label>
-          <input type="date" id="dateEnd">
-        </div>
-        <button class="btn btn-primary" onclick="carregarDados()">Atualizar</button>
-        <button class="btn btn-secondary" onclick="exportarPDF()">Exportar PDF</button>
-      </div>
-    </div>
-    <div id="chartsContainer" class="charts-grid"></div>
-  </section>
-
-</main>
-
-<!-- ==================== FOOTER ==================== -->
-<footer>BRUNX Ind &nbsp;|&nbsp; Sistema de Atendimento ao Cliente &nbsp;|&nbsp; Uso interno</footer>
-
-<!-- ==================== SCRIPTS ==================== -->
-<script>
-/* ========== CONFIGURAÇÃO ========== */
-const SCRIPT_URL = 'https://script.google.com/macros/s/<<https://script.google.com/macros/s/AKfycbyiJ1qaWMgApDKmtgXaKAmAEjzBYjal8QUmrJo7Ku8x36A0Tg8UKcnMtdYLmSE_SluWmw/exec>>/exec';
-
-/* ========== NAVEGAÇÃO ========== */
-function showSection(id, btn) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if (btn) btn.classList.add('active');
-}
-
-/* ========== UTILITÁRIOS ========== */
-function limparForm(id) {
-  document.getElementById(id).reset();
-}
-
-function showAlert(id, msg) {
-  const el = document.getElementById(id);
-  if (msg) el.textContent = msg;
-  el.style.display = 'block';
-  setTimeout(() => { el.style.display = 'none'; }, 4000);
-}
-
-async function hashPassword(pwd) {
-  const enc = new TextEncoder();
-  const data = enc.encode(pwd);
-  const hash = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(hash))
-    .map(b => ('0' + (b & 0xFF).toString(16)).slice(-2)).join('');
-}
-
-function getUsuario() {
-  return sessionStorage.getItem('user') || 'desconhecido';
-}
-
-/* ========== LOGIN ========== */
-async function tentarLogin() {
-  const user = document.getElementById('loginUser').value.trim();
-  const pass = document.getElementById('loginPass').value;
-  if (!user || !pass) return;
-
-  const hash = await hashPassword(pass);
-  try {
-    const resp = await fetch(`${SCRIPT_URL}?action=login&user=${encodeURIComponent(user)}&pass=${encodeURIComponent(hash)}`);
-    const data = await resp.json();
-    if (data.ok) {
-      sessionStorage.setItem('user', user);
-      sessionStorage.setItem('perfil', data.perfil);
-      document.getElementById('nomeUsuario').textContent = user;
-      document.getElementById('loginOverlay').style.display = 'none';
-    } else {
-      const err = document.getElementById('loginError');
-      err.style.display = 'block';
-      setTimeout(() => { err.style.display = 'none'; }, 3000);
-    }
-  } catch(e) {
-    alert('Erro de conexão. Verifique a URL do Apps Script.');
-  }
-}
-
-function fazerLogout() {
-  sessionStorage.clear();
-  location.reload();
-}
-
-// Ao carregar, verifica se já está logado
-window.addEventListener('DOMContentLoaded', () => {
-  const user = sessionStorage.getItem('user');
-  if (user) {
-    document.getElementById('nomeUsuario').textContent = user;
-    document.getElementById('loginOverlay').style.display = 'none';
-  }
-  // Enter no login
-  document.getElementById('loginPass').addEventListener('keydown', e => {
-    if (e.key === 'Enter') tentarLogin();
-  });
-});
-
-/* ========== ENVIO ========== */
-async function submitEnvio() {
-  const f = {
-    action: 'addEnvio',
-    usuario: getUsuario(),
-    canalVenda: document.getElementById('e_canal').value,
-    cliente:    document.getElementById('e_cliente').value,
-    telefone:   document.getElementById('e_tel').value,
-    numPedido:  document.getElementById('e_pedido').value,
-    tipoFalha:  document.getElementById('e_falha').value,
-    setorResp:  document.getElementById('e_setor').value,
-    solucao:    document.getElementById('e_solucao').value,
-    observacao: document.getElementById('e_obs').value
-  };
-
-  // Validação básica
-  const obrigatorios = ['canalVenda','cliente','telefone','numPedido','tipoFalha','setorResp','solucao'];
-  if (obrigatorios.some(k => !f[k])) {
-    showAlert('msgEnvioErr', 'Preencha todos os campos obrigatórios.');
-    return;
-  }
-
-  // Checagem de duplicidade
-  try {
-    const dup = await fetch(`${SCRIPT_URL}?action=checkPedido&num=${encodeURIComponent(f.numPedido)}`);
-    const dupData = await dup.json();
-    if (dupData.exists) {
-      if (!confirm('⚠️ Já existe um registro com este número de pedido.\nDeseja registrar mesmo assim?')) return;
-    }
-
-    const resp = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(f) });
-    const result = await resp.json();
-    if (result.ok) {
-      showAlert('msgEnvioOk');
-      limparForm('formEnvio');
-    } else {
-      showAlert('msgEnvioErr', 'Erro ao salvar: ' + result.error);
-    }
-  } catch(e) {
-    showAlert('msgEnvioErr', 'Erro de conexão.');
-  }
-}
-
-/* ========== REEMBOLSO ========== */
-async function submitReembolso() {
-  const f = {
-    action: 'addReembolso',
-    usuario:        getUsuario(),
-    cliente:        document.getElementById('r_cliente').value,
-    loja:           document.getElementById('r_loja').value,
-    tipoReembolso:  document.getElementById('r_tipo').value,
-    valor:          document.getElementById('r_valor').value,
-    motivo:         document.getElementById('r_motivo').value,
-    nfVenda:        document.getElementById('r_nfVenda').value,
-    nfDevolucao:    document.getElementById('r_nfDevol').value
-  };
-
-  const obrigatorios = ['cliente','loja','tipoReembolso','valor','motivo','nfVenda','nfDevolucao'];
-  if (obrigatorios.some(k => !f[k])) {
-    showAlert('msgReembErr', 'Preencha todos os campos obrigatórios.');
-    return;
-  }
-
-  try {
-    const nfResp = await fetch(`${SCRIPT_URL}?action=checkNF&nfVenda=${encodeURIComponent(f.nfVenda)}&nfDevol=${encodeURIComponent(f.nfDevolucao)}`);
-    const nfData = await nfResp.json();
-    if (nfData.dupVenda || nfData.dupDevol) {
-      let msg = '✗ Duplicidade encontrada:\n';
-      if (nfData.dupVenda) msg += '• NF de Venda já registrada\n';
-      if (nfData.dupDevol) msg += '• NF de Devolução já registrada\n';
-      showAlert('msgReembErr', msg.trim());
-      return;
-    }
-
-    const resp = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(f) });
-    const result = await resp.json();
-    if (result.ok) {
-      showAlert('msgReembOk');
-      limparForm('formReembolso');
-    } else {
-      showAlert('msgReembErr', 'Erro ao salvar: ' + result.error);
-    }
-  } catch(e) {
-    showAlert('msgReembErr', 'Erro de conexão.');
-  }
-}
-
-/* ========== RECEBIDOS ========== */
-async function submitRecebidos() {
-  const correto = document.querySelector('input[name="rc_correto"]:checked');
-  const f = {
-    action: 'addRecebidos',
-    usuario:           getUsuario(),
-    responsavel:       document.getElementById('rc_resp').value,
-    canalVenda:        document.getElementById('rc_canal').value,
-    numPedido:         document.getElementById('rc_pedido').value,
-    nomeCliente:       document.getElementById('rc_nome').value,
-    telefone:          document.getElementById('rc_tel').value,
-    transportadora:    document.getElementById('rc_transp').value,
-    motivoTroca:       document.getElementById('rc_motivo').value,
-    produtoCorreto:    correto ? correto.value : '',
-    produtosRecebidos: document.getElementById('rc_pecas').value,
-    observacao:        document.getElementById('rc_obs').value
-  };
-
-  const obrigatorios = ['responsavel','canalVenda','numPedido','nomeCliente','telefone','transportadora','motivoTroca','produtoCorreto','produtosRecebidos'];
-  if (obrigatorios.some(k => !f[k])) {
-    showAlert('msgRecebErr', 'Preencha todos os campos obrigatórios.');
-    return;
-  }
-
-  try {
-    const resp = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(f) });
-    const result = await resp.json();
-    if (result.ok) {
-      showAlert('msgRecebOk');
-      limparForm('formRecebidos');
-    } else {
-      showAlert('msgRecebErr', 'Erro ao salvar: ' + result.error);
-    }
-  } catch(e) {
-    showAlert('msgRecebErr', 'Erro de conexão.');
-  }
-}
-
-/* ========== DASHBOARD ========== */
-google.charts && google.charts.load('current', { packages: ['corechart'] });
-
-async function carregarDados() {
-  const base  = document.getElementById('filterBase').value;
-  const start = document.getElementById('dateStart').value;
-  const end   = document.getElementById('dateEnd').value;
-  const url   = `${SCRIPT_URL}?action=getDashboard&base=${base}&start=${start}&end=${end}`;
-  try {
-    const resp = await fetch(url);
-    const data = await resp.json();
-    desenharGraficos(data);
-  } catch(e) {
-    document.getElementById('chartsContainer').innerHTML =
-      '<p style="color:var(--red);font-size:.85rem;">Erro ao carregar dados do dashboard.</p>';
-  }
-}
-
-function desenharGraficos(data) {
-  const container = document.getElementById('chartsContainer');
-  container.innerHTML = '';
-
-  // Gráfico 1 — Envios por canal
-  if (data.envio && data.envio.length) {
-    const div = criarChartCard('Envios por Canal');
-    container.appendChild(div);
-    const tabela = new google.visualization.DataTable();
-    tabela.addColumn('string', 'Canal');
-    tabela.addColumn('number', 'Qtd');
-    const cnt = {};
-    data.envio.forEach(r => { const c = r['CANAL_VENDA'] || '—'; cnt[c] = (cnt[c] || 0) + 1; });
-    Object.entries(cnt).forEach(([k, v]) => tabela.addRow([k, v]));
-    const chart = new google.visualization.PieChart(div.querySelector('.chart-inner'));
-    chart.draw(tabela, chartOptions());
-  }
-
-  // Gráfico 2 — Reembolsos por motivo
-  if (data.reembolso && data.reembolso.length) {
-    const div = criarChartCard('Reembolsos por Motivo');
-    container.appendChild(div);
-    const tabela = new google.visualization.DataTable();
-    tabela.addColumn('string', 'Motivo');
-    tabela.addColumn('number', 'Qtd');
-    const cnt = {};
-    data.reembolso.forEach(r => { const c = r['MOTIVO'] || '—'; cnt[c] = (cnt[c] || 0) + 1; });
-    Object.entries(cnt).forEach(([k, v]) => tabela.addRow([k, v]));
-    const chart = new google.visualization.BarChart(div.querySelector('.chart-inner'));
-    chart.draw(tabela, chartOptions());
-  }
-}
-
-function criarChartCard(titulo) {
-  const div = document.createElement('div');
-  div.className = 'chart-card';
-  div.innerHTML = `<h3>${titulo}</h3><div class="chart-inner" style="height:260px;"></div>`;
-  return div;
-}
-
-function chartOptions() {
-  return {
-    backgroundColor: 'transparent',
-    legend: { textStyle: { color: '#333', fontSize: 12 } },
-    titleTextStyle: { color: '#111' },
-    colors: ['#AA0000', '#111111', '#888888', '#CCCCCC'],
-    chartArea: { width: '85%', height: '75%' }
-  };
-}
-
-/* ========== EXPORTAR PDF ========== */
-function exportarPDF() {
-  const s1 = document.createElement('script');
-  s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-  s1.onload = () => {
-    const s2 = document.createElement('script');
-    s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-    s2.onload = async () => {
-      const { jsPDF } = window.jspdf;
-      const canvas = await html2canvas(document.getElementById('chartsContainer'));
-      const img = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const w = pdf.internal.pageSize.getWidth();
-      const h = (canvas.height * w) / canvas.width;
-      pdf.addImage(img, 'PNG', 0, 0, w, h);
-      pdf.save('dashboard-brunx.pdf');
-    };
-    document.body.appendChild(s2);
-  };
-  document.body.appendChild(s1);
-}
-</script>
-<script src="https://www.gstatic.com/charts/loader.js"></script>
-</body>
-</html>
