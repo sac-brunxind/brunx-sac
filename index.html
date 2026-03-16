@@ -181,7 +181,7 @@
   }
   textarea { resize: vertical; min-height: 80px; }
 
-  /* ===== TOGGLE BUTTONS (Sim/Não) ===== */
+  /* ===== TOGGLE SIM/NÃO ===== */
   .toggle-btn-group {
     display: flex;
     gap: 0.75rem;
@@ -216,7 +216,7 @@
     color: var(--black);
   }
 
-  /* ===== BOTÕES ===== */
+  /* ===== BOTÕES GERAIS ===== */
   .btn {
     padding: 0.65rem 1.5rem;
     border: none;
@@ -340,27 +340,49 @@
     display: none;
   }
 
-  /* Lembrar-me */
+  /* ===== LEMBRAR-ME PERSONALIZADO ===== */
   .remember-row {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
     margin-top: 0.25rem;
-  }
-  .remember-row input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: var(--red);
     cursor: pointer;
-    flex-shrink: 0;
+    user-select: none;
   }
-  .remember-row label {
+  /* Esconde o checkbox nativo */
+  .remember-row input[type="checkbox"] {
+    display: none;
+  }
+  /* Caixa visual personalizada */
+  .remember-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  /* Check SVG dentro da caixa — invisível por padrão */
+  .remember-box svg {
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  /* Quando marcado: fundo preto, borda preta, check branco aparece */
+  .remember-row input[type="checkbox"]:checked + .remember-box {
+    background: var(--black);
+    border-color: var(--black);
+  }
+  .remember-row input[type="checkbox"]:checked + .remember-box svg {
+    opacity: 1;
+  }
+  .remember-label {
     font-size: 0.8rem;
     font-weight: 500;
-    text-transform: none;
-    letter-spacing: 0;
     color: var(--gray-mid);
-    cursor: pointer;
   }
 
   /* ===== FOOTER ===== */
@@ -403,11 +425,21 @@
         <label for="loginPass">Senha</label>
         <input type="password" id="loginPass" placeholder="Digite sua senha" autocomplete="current-password">
       </div>
-      <div class="remember-row">
+
+      <!-- LEMBRAR-ME PERSONALIZADO -->
+      <label class="remember-row" for="lembrarMe">
         <input type="checkbox" id="lembrarMe">
-        <label for="lembrarMe">Lembrar-me neste dispositivo</label>
-      </div>
-      <div class="login-error" id="loginError">Usuário ou senha incorretos.</div>
+        <span class="remember-box">
+          <!-- Ícone de check branco -->
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <polyline points="2,6 5,9 10,3" stroke="white" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="remember-label">Lembrar-me neste dispositivo</span>
+      </label>
+
+      <div class="login-error" id="loginError"></div>
       <button type="button" class="btn btn-primary"
         style="width:100%;margin-top:0.5rem;"
         onclick="tentarLogin()">
@@ -427,7 +459,7 @@
   </div>
 </header>
 
-<!-- ===== NAV ===== -->
+<!-- ===== NAV ===== */
 <nav>
   <button class="active" onclick="showSection('envio', this)">Envio</button>
   <button onclick="showSection('reembolso', this)">Reembolso</button>
@@ -513,12 +545,13 @@
           </div>
         </div>
         <div class="alert alert-success" id="msgEnvioOk">Registro salvo com sucesso.</div>
-        <div class="alert alert-error"   id="msgEnvioErr"></div>
         <div class="alert alert-warning" id="msgEnvioDup"></div>
+        <div class="alert alert-error"   id="msgEnvioErr"></div>
         <div class="form-actions">
           <button type="button" class="btn btn-outline"
             onclick="document.getElementById('formEnvio').reset()">Limpar</button>
-          <button type="button" class="btn btn-primary" id="btnRegistrarEnvio" onclick="submitEnvio()">Registrar</button>
+          <button type="button" class="btn btn-primary" id="btnRegistrarEnvio"
+            onclick="submitEnvio()">Registrar</button>
         </div>
       </form>
     </div>
@@ -776,15 +809,15 @@ async function tentarLogin() {
   const userRaw = document.getElementById('loginUser').value.trim();
   const pass    = document.getElementById('loginPass').value;
   const lembrar = document.getElementById('lembrarMe').checked;
+  const errEl   = document.getElementById('loginError');
 
   if (!userRaw || !pass) {
-    const err = document.getElementById('loginError');
-    err.textContent = 'Preencha usuário e senha.';
-    err.style.display = 'block';
+    errEl.textContent = 'Preencha usuário e senha.';
+    errEl.style.display = 'block';
     return;
   }
 
-  // Normaliza para minúsculas — case-insensitive
+  // Case-insensitive: normaliza para minúsculas antes de enviar
   const user = userRaw.toLowerCase();
   const hash = await hashPassword(pass);
 
@@ -795,29 +828,30 @@ async function tentarLogin() {
     const data = await resp.json();
 
     if (data.ok) {
-      // Salva na sessão sempre
       sessionStorage.setItem('user', userRaw);
       sessionStorage.setItem('perfil', data.perfil || '');
 
-      // Se "Lembrar-me" marcado, salva no localStorage também
       if (lembrar) {
         localStorage.setItem('user', userRaw);
         localStorage.setItem('perfil', data.perfil || '');
         localStorage.setItem('lembrado', 'true');
+      } else {
+        // Se desmarcou, remove dados salvos anteriormente
+        localStorage.removeItem('user');
+        localStorage.removeItem('perfil');
+        localStorage.removeItem('lembrado');
       }
 
       document.getElementById('nomeUsuario').textContent = userRaw;
       document.getElementById('loginOverlay').classList.add('hidden');
     } else {
-      const err = document.getElementById('loginError');
-      err.textContent = 'Usuário ou senha incorretos.';
-      err.style.display = 'block';
-      setTimeout(() => { err.style.display = 'none'; }, 3000);
+      errEl.textContent = 'Usuário ou senha incorretos.';
+      errEl.style.display = 'block';
+      setTimeout(() => { errEl.style.display = 'none'; }, 3000);
     }
   } catch(e) {
-    const err = document.getElementById('loginError');
-    err.textContent = 'Erro de conexão. Tente novamente.';
-    err.style.display = 'block';
+    errEl.textContent = 'Erro de conexão. Tente novamente.';
+    errEl.style.display = 'block';
   }
 }
 
@@ -831,27 +865,20 @@ function fazerLogout() {
 
 /* ===== INIT ===== */
 window.addEventListener('DOMContentLoaded', () => {
-  // Verifica sessão atual
-  const userSessao = sessionStorage.getItem('user');
-  // Verifica lembrar-me
-  const userLembrado = localStorage.getItem('lembrado') === 'true' ? localStorage.getItem('user') : null;
-  const user = userSessao || userLembrado;
+  const userSessao  = sessionStorage.getItem('user');
+  const lembrado    = localStorage.getItem('lembrado') === 'true';
+  const userSalvo   = localStorage.getItem('user');
+  const userAtivo   = userSessao || (lembrado ? userSalvo : null);
 
-  if (user) {
-    document.getElementById('nomeUsuario').textContent = user;
+  if (userAtivo) {
+    document.getElementById('nomeUsuario').textContent = userAtivo;
     document.getElementById('loginOverlay').classList.add('hidden');
-    // Se veio do localStorage, preenche também a sessão
-    if (!userSessao && userLembrado) {
-      sessionStorage.setItem('user', userLembrado);
-    }
-  } else {
-    // Pré-preenche usuário se estava lembrado anteriormente
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      document.getElementById('loginUser').value = savedUser;
-      document.getElementById('lembrarMe').checked = true;
-      document.getElementById('loginPass').focus();
-    }
+    if (!userSessao && lembrado) sessionStorage.setItem('user', userSalvo);
+  } else if (userSalvo) {
+    // Pré-preenche o campo e marca o checkbox visualmente
+    document.getElementById('loginUser').value = userSalvo;
+    document.getElementById('lembrarMe').checked = true;
+    document.getElementById('loginPass').focus();
   }
 
   document.getElementById('loginPass').addEventListener('keydown', e => {
@@ -862,7 +889,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-/* ===== ENVIO — com bloqueio de duplicidade ===== */
+/* ===== ENVIO — bloqueio total de duplicidade ===== */
 let envioEmAndamento = false;
 
 async function submitEnvio() {
@@ -887,22 +914,23 @@ async function submitEnvio() {
     return;
   }
 
-  // Bloqueia botão para evitar duplo clique
   envioEmAndamento = true;
   const btn = document.getElementById('btnRegistrarEnvio');
   btn.disabled = true;
   btn.textContent = 'Verificando...';
 
   try {
-    // Verifica duplicidade — se existir, BLOQUEIA (não pergunta)
-    const dup = await fetch(`${SCRIPT_URL}?action=checkPedido&num=${encodeURIComponent(payload.numPedido)}`);
+    const dup = await fetch(
+      `${SCRIPT_URL}?action=checkPedido&num=${encodeURIComponent(payload.numPedido)}`
+    );
     const dupData = await dup.json();
 
     if (dupData.exists) {
-      showAlert('msgEnvioDup', `Pedido ${payload.numPedido} já está registrado na base. Registro bloqueado.`);
-      return; // Para aqui, não registra
+      showAlert('msgEnvioDup', `Pedido ${payload.numPedido} já registrado na base. Registro bloqueado.`);
+      return;
     }
 
+    btn.textContent = 'Salvando...';
     const resp = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
     const result = await resp.json();
 
@@ -915,7 +943,6 @@ async function submitEnvio() {
   } catch(e) {
     showAlert('msgEnvioErr', 'Erro de conexão com o servidor.');
   } finally {
-    // Reabilita botão após 2s
     setTimeout(() => {
       envioEmAndamento = false;
       btn.disabled = false;
@@ -1016,7 +1043,9 @@ async function carregarDados() {
   const start = document.getElementById('dateStart').value;
   const end   = document.getElementById('dateEnd').value;
   try {
-    const resp = await fetch(`${SCRIPT_URL}?action=getDashboard&base=${base}&start=${start}&end=${end}`);
+    const resp = await fetch(
+      `${SCRIPT_URL}?action=getDashboard&base=${base}&start=${start}&end=${end}`
+    );
     const data = await resp.json();
     desenharGraficos(data);
   } catch(e) {
