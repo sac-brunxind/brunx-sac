@@ -315,7 +315,7 @@ function showSection(id){
 /* ---------- AUTENTICAÇÃO ---------- */
 async function login(username,password){
   // chama Apps Script que verifica hash da senha
-  const url = 'https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec';
+  const url = 'https://script.google.com/macros/s/<<https://script.google.com/macros/s/AKfycbyiJ1qaWMgApDKmtgXaKAmAEjzBYjal8QUmrJo7Ku8x36A0Tg8UKcnMtdYLmSE_SluWmw/exec>>/exec';
   const resp = await fetch(url+'?action=login&user='+encodeURIComponent(username)+'&pass='+encodeURIComponent(password));
   const data = await resp.json();
   return data; // {ok:true, perfil:"operador", nome:"Bruno"}
@@ -344,14 +344,14 @@ document.getElementById('formEnvio').addEventListener('submit', async e=>{
     observacao:f.observacao.value
   };
   // checagem de duplicidade de número de pedido
-  const dup = await fetch(`https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec?action=checkPedido&num=${encodeURIComponent(payload.numPedido)}`);
+  const dup = await fetch(`https://script.google.com/macros/s/<<https://script.google.com/macros/s/AKfycbyiJ1qaWMgApDKmtgXaKAmAEjzBYjal8QUmrJo7Ku8x36A0Tg8UKcnMtdYLmSE_SluWmw/exec>>/exec?action=checkPedido&num=${encodeURIComponent(payload.numPedido)}`);
   const dupData = await dup.json();
   if(dupData.exists){
     if(!confirm('Já existe um registro com este número de pedido. Deseja continuar?')){
       return;
     }
   }
-  const resp = await fetch(`https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec`,{
+  const resp = await fetch(`https://script.google.com/macros/s/<<https://script.google.com/macros/s/AKfycbyiJ1qaWMgApDKmtgXaKAmAEjzBYjal8QUmrJo7Ku8x36A0Tg8UKcnMtdYLmSE_SluWmw/exec>>/exec`,{
     method:'POST',
     body:JSON.stringify(payload)
   });
@@ -378,7 +378,7 @@ document.getElementById('formReembolso').addEventListener('submit', async e=>{
     nfDevolucao:f.nfDevolucao.value
   };
   // validação de NF duplicada
-  const nfResp = await fetch(`https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec?action=checkNF&nfVenda=${encodeURIComponent(payload.nfVenda)}&nfDevol=${encodeURIComponent(payload.nfDevolucao)}`);
+  const nfResp = await fetch(`https://script.google.com/macros/s/<<https://script.google.com/macros/s/AKfycbyiJ1qaWMgApDKmtgXaKAmAEjzBYjal8QUmrJo7Ku8x36A0Tg8UKcnMtdYLmSE_SluWmw/exec>>/exec?action=checkNF&nfVenda=${encodeURIComponent(payload.nfVenda)}&nfDevol=${encodeURIComponent(payload.nfDevolucao)}`);
   const nfData = await nfResp.json();
   if(nfData.dupVenda || nfData.dupDevol){
     let msg='Existem duplicidades:\n';
@@ -387,7 +387,7 @@ document.getElementById('formReembolso').addEventListener('submit', async e=>{
     alert(msg);
     return;
   }
-  const resp = await fetch(`https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec`,{
+  const resp = await fetch(`https://script.google.com/macros/s/<<https://script.google.com/macros/s/AKfycbyiJ1qaWMgApDKmtgXaKAmAEjzBYjal8QUmrJo7Ku8x36A0Tg8UKcnMtdYLmSE_SluWmw/exec>>/exec`,{
     method:'POST',
     body:JSON.stringify(payload)
   });
@@ -416,7 +416,7 @@ document.getElementById('formRecebidos').addEventListener('submit', async e=>{
     produtosRecebidos:f.produtosRecebidos.value,
     observacao:f.observacao.value
   };
-  const resp = await fetch(`https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec`,{
+  const resp = await fetch(`https://script.google.com/macros/s/<<https://script.google.com/macros/s/AKfycbyiJ1qaWMgApDKmtgXaKAmAEjzBYjal8QUmrJo7Ku8x36A0Tg8UKcnMtdYLmSE_SluWmw/exec>>/exec`,{
     method:'POST',
     body:JSON.stringify(payload)
   });
@@ -444,7 +444,7 @@ async function carregarDados(){
   const base = document.getElementById('filterBase').value;
   const start = document.getElementById('dateStart').value;
   const end   = document.getElementById('dateEnd').value;
-  const url = `https://script.google.com/macros/s/<<YOUR_SCRIPT_ID>>/exec?action=getDashboard&base=${base}&start=${start}&end=${end}`;
+  const url = `https://script.google.com/macros/s/<<https://script.google.com/macros/s/AKfycbyiJ1qaWMgApDKmtgXaKAmAEjzBYjal8QUmrJo7Ku8x36A0Tg8UKcnMtdYLmSE_SluWmw/exec>>/exec?action=getDashboard&base=${base}&start=${start}&end=${end}`;
   const resp = await fetch(url);
   const data = await resp.json(); // {envio:[], reembolso:[], recebidos:[]}
   desenharGraficos(data);
