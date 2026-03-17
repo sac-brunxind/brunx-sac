@@ -19,6 +19,7 @@
   header { background: var(--white); border-bottom: 3px solid var(--red); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow); z-index: 100; }
   header img { height: 42px; width: auto; }
   .header-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-mid); }
+  .header-user { font-size: 0.8rem; color: var(--gray-mid); display: flex; align-items: center; gap: 0.5rem; }
 
   nav { background: var(--white); border-bottom: 1px solid var(--border); display: flex; padding: 0 2rem; overflow-x: auto; z-index: 99; flex-shrink: 0; }
   nav button { background: none; border: none; border-bottom: 3px solid transparent; padding: 1rem 1.5rem; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gray-mid); cursor: pointer; transition: all 0.2s; white-space: nowrap; }
@@ -70,6 +71,20 @@
   .alert-error   { background: #FFF0F0; border: 1px solid #FECACA; color: #991B1B; }
   .alert-warning { background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; }
 
+  /* HISTÓRICO DE ATIVIDADES */
+  .historico-atividades { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+  .historico-atividades h3 { font-size: 0.9rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-dark); margin-bottom: 1rem; }
+  .historico-lista { list-style: none; padding: 0; margin: 0; }
+  .historico-item { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.75rem 1rem; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--gray-dark); display: flex; justify-content: space-between; align-items: center; }
+  .historico-item .data { font-size: 0.75rem; color: var(--gray-mid); }
+  .historico-vazio { text-align: center; padding: 1rem; color: var(--gray-mid); font-size: 0.85rem; }
+
+  /* FILTROS */
+  .filtros-wrap { margin-bottom: 1.25rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .filtros-wrap .form-group { margin-bottom: 0; }
+  .filtros-wrap input, .filtros-wrap select { width: 100%; }
+  .filtros-wrap .busca-texto { grid-column: 1 / -1; }
+
   /* PENDÊNCIAS */
   .busca-wrap { margin-bottom: 1.25rem; }
   .busca-wrap input { padding: 0.6rem 0.9rem; border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; width: 100%; }
@@ -87,6 +102,9 @@
   .pendencia-resumo-info span { font-size: 0.82rem; color: var(--gray-dark); }
   .pendencia-resumo-info strong { font-size: 0.85rem; color: var(--black); font-weight: 700; }
   .pendencia-badge { background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 999px; white-space: nowrap; }
+  .pendencia-badge.status-aguardando { background: #F0F9FF; border-color: #93C5FD; color: #2563EB; }
+  .pendencia-badge.status-em-processo { background: #FFFBEB; border-color: #FCD34D; color: #92400E; }
+
   .pendencia-chevron { font-size: 0.75rem; color: var(--gray-mid); transition: transform 0.2s; flex-shrink: 0; }
   .pendencia-linha.aberta .pendencia-chevron { transform: rotate(180deg); }
 
@@ -111,6 +129,13 @@
 
   .pendencia-actions { display: flex; gap: 0.75rem; justify-content: flex-end; padding-top: 0.75rem; border-top: 1px solid var(--border); }
 
+  /* MODAL DE CONFIRMAÇÃO */
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-content { background: var(--white); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow); max-width: 450px; width: 90%; text-align: center; }
+  .modal-content h3 { font-size: 1.1rem; color: var(--black); margin-bottom: 1rem; }
+  .modal-content p { font-size: 0.9rem; color: var(--gray-dark); margin-bottom: 1.5rem; }
+  .modal-actions { display: flex; justify-content: center; gap: 1rem; }
+
   footer { background: var(--white); border-top: 1px solid var(--border); padding: 0.75rem 2rem; text-align: center; font-size: 0.72rem; color: var(--gray-mid); letter-spacing: 0.05em; flex-shrink: 0; }
 
   @media (max-width: 640px) {
@@ -123,6 +148,7 @@
     .card { padding: 1.25rem; }
     .header-title { display: none; }
     .pendencia-resumo-info { gap: 0.75rem; }
+    .filtros-wrap { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -265,6 +291,12 @@
           <button type="button" class="btn btn-primary" id="btnRegistrarEnvio" onclick="submitEnvio()">Registrar</button>
         </div>
       </form>
+      <div class="historico-atividades">
+        <h3>Últimas 5 Ações (Envio)</h3>
+        <ul id="historicoEnvio" class="historico-lista">
+          <li class="historico-vazio">Nenhuma ação recente.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -331,6 +363,12 @@
           <button type="button" class="btn btn-primary" onclick="submitReembolso()">Registrar</button>
         </div>
       </form>
+      <div class="historico-atividades">
+        <h3>Últimas 5 Ações (Reembolso)</h3>
+        <ul id="historicoReembolso" class="historico-lista">
+          <li class="historico-vazio">Nenhuma ação recente.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -428,6 +466,12 @@
           <button type="button" class="btn btn-primary" onclick="submitRecebidos()">Registrar</button>
         </div>
       </form>
+      <div class="historico-atividades">
+        <h3>Últimas 5 Ações (Recebidos)</h3>
+        <ul id="historicoRecebidos" class="historico-lista">
+          <li class="historico-vazio">Nenhuma ação recente.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -453,6 +497,18 @@
 
 <footer>BRUNX Ind &nbsp;|&nbsp; Sistema de Atendimento ao Cliente &nbsp;|&nbsp; Uso interno</footer>
 
+<!-- MODAL DE CONFIRMAÇÃO -->
+<div id="confirmModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3>Confirmar Resolução de Pendência</h3>
+    <p>Você está prestes a resolver a pendência do pedido <strong id="modalPedido"></strong>. Esta ação é irreversível.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="hideConfirmModal()">Cancelar</button>
+      <button class="btn btn-success" id="btnConfirmarResolucao">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfafNFGUPJnKaSgwL6URt5FMeqtC6Svjgz5G1EEv3WkdiMMzrV_jRXmCorvRAa9UzkBQ/exec';
 
@@ -463,6 +519,17 @@ function showSection(id, btn) {
   document.getElementById(id).classList.add('active');
   if (btn) btn.classList.add('active');
   if (id === 'pendencias') carregarPendencias();
+  if (id === 'envio') {
+    carregarHistoricoEnvio();
+    carregarDadosParaFiltros('envio'); // Carrega dados completos para filtros de Envio
+  }
+  if (id === 'reembolso') {
+    carregarHistoricoReembolso();
+  }
+  if (id === 'recebidos') {
+    carregarHistoricoRecebidos();
+    carregarDadosParaFiltros('recebidos'); // Carrega dados completos para filtros de Recebidos
+  }
 }
 
 /* ===== MÁSCARA DE TELEFONE ===== */
@@ -487,6 +554,16 @@ function dataHoje() {
   return `${dia}/${mes}/${ano}`;
 }
 
+function calcularDiasEmAberto(dataRegistro) {
+  if (!dataRegistro) return '—';
+  const [dia, mes, ano] = dataRegistro.split('/').map(Number);
+  const dataInicio = new Date(ano, mes - 1, dia);
+  const hoje = new Date();
+  const diffTempo = Math.abs(hoje.getTime() - dataInicio.getTime());
+  const diffDias = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
+  return `${diffDias} dias`;
+}
+
 /* ===== UTILITÁRIOS ===== */
 function showAlert(id, msg) {
   const el = document.getElementById(id);
@@ -497,12 +574,61 @@ function showAlert(id, msg) {
 
 function formatarData(val) {
   if (!val) return '—';
-  if (/^\d{2}\/\d{2}\/\d{4}$/.test(val)) return val;
+  if (/
+^
+\d{2}\/\d{2}\/\d{4}
+$
+/.test(val)) return val;
   const d = new Date(val);
   if (isNaN(d)) return val;
   const dia = String(d.getDate()).padStart(2, '0');
   const mes = String(d.getMonth() + 1).padStart(2, '0');
   return `${dia}/${mes}/${d.getFullYear()}`;
+}
+
+/* ===== HISTÓRICO DE ATIVIDADES (LOCAL) ===== */
+const historicoAtividades = {
+  envio: [],
+  reembolso: [],
+  recebidos: [],
+  pendencias: [] // Para resolução de pendências
+};
+
+function adicionarAoHistorico(tipo, mensagem) {
+  const agora = new Date();
+  const hora = String(agora.getHours()).padStart(2, '0');
+  const minuto = String(agora.getMinutes()).padStart(2, '0');
+  const item = {
+    mensagem: mensagem,
+    hora: `${hora}:${minuto}`
+  };
+
+  historicoAtividades[tipo].unshift(item); // Adiciona no início
+  if (historicoAtividades[tipo].length > 5) {
+    historicoAtividades[tipo].pop(); // Remove o mais antigo se exceder 5
+  }
+  renderizarHistorico(tipo);
+}
+
+function renderizarHistorico(tipo) {
+  const lista = document.getElementById(`historico${capitalize(tipo)}`);
+  if (!lista) return;
+
+  if (historicoAtividades[tipo].length === 0) {
+    lista.innerHTML = '<li class="historico-vazio">Nenhuma ação recente.</li>';
+    return;
+  }
+
+  lista.innerHTML = historicoAtividades[tipo].map(item => `
+    <li class="historico-item">
+      <span>${item.mensagem}</span>
+      <span class="data">${item.hora}</span>
+    </li>
+  `).join('');
+}
+
+function capitalize(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 /* ===== OBRIGATORIEDADE RECEBIDOS ===== */
@@ -615,6 +741,7 @@ async function submitEnvio() {
 
     if (result.ok) {
       showAlert('msgEnvioOk');
+      adicionarAoHistorico('envio', `Envio registrado: Pedido ${payload.numPedido}`);
       limparEnvio();
     } else {
       showAlert('msgEnvioErr', 'Erro: ' + (result.error || 'desconhecido'));
@@ -667,6 +794,7 @@ async function submitReembolso() {
     const result = await resp.json();
     if (result.ok) {
       showAlert('msgReembOk');
+      adicionarAoHistorico('reembolso', `Reembolso registrado: ${payload.cliente}`);
       document.getElementById('formReembolso').reset();
     } else {
       showAlert('msgReembErr', 'Erro: ' + (result.error || 'desconhecido'));
@@ -688,6 +816,7 @@ function limparRecebidos() {
   document.getElementById('rc_correto').value = '';
   document.getElementById('btnSim').className = '';
   document.getElementById('btnNao').className = '';
+  toggleObrigatoriedadeRecebidos(); // Resetar obrigatoriedade
 }
 
 async function submitRecebidos() {
@@ -706,7 +835,8 @@ async function submitRecebidos() {
     motivoTroca:       document.getElementById('rc_motivo').value,
     produtoCorreto:    document.getElementById('rc_correto').value,
     produtosRecebidos: document.getElementById('rc_pecas').value.trim(),
-    observacao:        document.getElementById('rc_obs').value.trim()
+    observacao:        document.getElementById('rc_obs').value.trim(),
+    statusPendencia:   emProcesso ? 'Em processo - aguardando retorno do cliente' : 'Concluído'
   };
 
   if (!emProcesso) {
@@ -714,6 +844,12 @@ async function submitRecebidos() {
                           'transportadora','motivoTroca','produtoCorreto','produtosRecebidos'];
     if (obrigatorios.some(k => !payload[k])) {
       showAlert('msgRecebErr', 'Preencha todos os campos obrigatórios.');
+      return;
+    }
+  } else { // Se for "Em processo", verificar campos essenciais para a pendência
+    const essenciaisPendencia = ['numPedido', 'nomeCliente', 'telefone'];
+    if (essenciaisPendencia.some(k => !payload[k])) {
+      showAlert('msgRecebErr', 'Para criar uma pendência, o número do pedido, nome do cliente e telefone são obrigatórios.');
       return;
     }
   }
@@ -725,9 +861,11 @@ async function submitRecebidos() {
     if (result.ok) {
       if (emProcesso) {
         showAlert('msgRecebPendencia');
+        adicionarAoHistorico('recebidos', `Pendência criada: Pedido ${payload.numPedido}`);
         atualizarBadgePendencias();
       } else {
         showAlert('msgRecebOk');
+        adicionarAoHistorico('recebidos', `Recebido registrado: Pedido ${payload.numPedido}`);
       }
       limparRecebidos();
     } else {
@@ -740,6 +878,7 @@ async function submitRecebidos() {
 
 /* ===== PENDÊNCIAS ===== */
 let listaPendenciasGlobal = [];
+let pendenciaParaResolver = null; // Para a modal de confirmação
 
 async function carregarPendencias() {
   const container = document.getElementById('pendenciasContainer');
@@ -764,7 +903,8 @@ function filtrarPendencias() {
     return (
       (p.NUM_PEDIDO    || '').toLowerCase().includes(termo) ||
       (p.NOME_CLIENTE  || '').toLowerCase().includes(termo) ||
-      (p.TELEFONE      || '').toLowerCase().includes(termo)
+      (p.TELEFONE      || '').toLowerCase().includes(termo) ||
+      (p.STATUS_PENDENCIA || '').toLowerCase().includes(termo)
     );
   });
   renderizarPendencias(filtrada);
@@ -788,17 +928,21 @@ function renderizarPendencias(lista) {
   badge.textContent = listaPendenciasGlobal.length;
   badge.style.display = 'inline-flex';
 
-  container.innerHTML = lista.map((p, idx) => `
+  container.innerHTML = lista.map((p, idx) => {
+    const statusClass = p.STATUS_PENDENCIA === 'Aguardando retorno do cliente' ? 'status-aguardando' : 'status-em-processo';
+    const diasEmAberto = calcularDiasEmAberto(formatarData(p.DATA));
+
+    return `
     <div class="pendencia-linha" id="pcard-${idx}">
       <div class="pendencia-resumo" onclick="toggleCard(${idx})">
         <div class="pendencia-resumo-info">
           <strong>Pedido ${p.NUM_PEDIDO || '—'}</strong>
           <span>${p.NOME_CLIENTE || '—'}</span>
-          <span>${formatarData(p.DATA)}</span>
+          <span>${formatarData(p.DATA)} (${diasEmAberto})</span>
           <span>${p.TELEFONE || '—'}</span>
         </div>
         <div style="display:flex;align-items:center;gap:0.75rem;">
-          <span class="pendencia-badge">Em Processo</span>
+          <span class="pendencia-badge ${statusClass}">${p.STATUS_PENDENCIA || 'Em processo - aguardando retorno do cliente'}</span>
           <span class="pendencia-chevron">▼</span>
         </div>
       </div>
@@ -865,6 +1009,13 @@ function renderizarPendencias(lista) {
               <label>Peças Recebidas</label>
               <input type="text" id="ed_pecas_${idx}" value="${p.PRODUTOS_RECEBIDOS || ''}">
             </div>
+            <div class="form-group">
+              <label>Status da Pendência</label>
+              <select id="ed_status_${idx}">
+                <option value="Em processo - aguardando retorno do cliente"${p.STATUS_PENDENCIA === 'Em processo - aguardando retorno do cliente' ? ' selected' : ''}>Em processo - aguardando retorno do cliente</option>
+                <option value="Aguardando retorno do cliente"${p.STATUS_PENDENCIA === 'Aguardando retorno do cliente' ? ' selected' : ''}>Aguardando retorno do cliente</option>
+              </select>
+            </div>
             <div class="form-group" style="grid-column:1/-1;">
               <label>Observação</label>
               <input type="text" id="ed_obs_${idx}" value="${p.OBSERVACAO || ''}">
@@ -872,7 +1023,7 @@ function renderizarPendencias(lista) {
           </div>
           <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.75rem;">
             <button class="btn btn-outline" onclick="cancelarEdicao(${idx})">Cancelar</button>
-            <button class="btn btn-warning" onclick="salvarEdicaoLocal(${idx})">Salvar Edição</button>
+            <button class="btn btn-warning" onclick="salvarEdicaoLocal(${idx}, ${p._linha})">Salvar Edição</button>
           </div>
         </div>
 
@@ -892,7 +1043,7 @@ function renderizarPendencias(lista) {
               <label>Observação <span class="opcional">(opcional)</span></label>
               <input type="text" id="obs-${idx}" placeholder="Complemento opcional">
             </div>
-            <button class="btn btn-success" onclick="confirmarResolucao(${idx}, ${p._linha})">Confirmar</button>
+            <button class="btn btn-success" onclick="showConfirmModal(${idx})">Confirmar</button>
           </div>
           <div class="alert alert-error" id="erroResolver-${idx}"></div>
         </div>
@@ -903,7 +1054,8 @@ function renderizarPendencias(lista) {
         </div>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function toggleCard(idx) {
@@ -921,24 +1073,57 @@ function cancelarEdicao(idx) {
   document.getElementById(`editar-${idx}`).classList.remove('aberto');
 }
 
-function salvarEdicaoLocal(idx) {
+async function salvarEdicaoLocal(idx, linha) {
   const p = listaPendenciasGlobal.find((_, i) => i === idx);
   if (!p) return;
-  p.NUM_PEDIDO         = document.getElementById(`ed_pedido_${idx}`).value.trim();
-  p.NOME_CLIENTE       = document.getElementById(`ed_nome_${idx}`).value.trim();
-  p.TELEFONE           = document.getElementById(`ed_tel_${idx}`).value.trim();
-  p.CANAL_VENDA        = document.getElementById(`ed_canal_${idx}`).value;
-  p.TRANSPORTADORA     = document.getElementById(`ed_transp_${idx}`).value;
-  p.MOTIVO_TROCA       = document.getElementById(`ed_motivo_${idx}`).value;
-  p.PRODUTO_CORRETO    = document.getElementById(`ed_correto_${idx}`).value;
-  p.PRODUTOS_RECEBIDOS = document.getElementById(`ed_pecas_${idx}`).value.trim();
-  p.OBSERVACAO         = document.getElementById(`ed_obs_${idx}`).value.trim();
 
-  document.getElementById(`editar-${idx}`).classList.remove('aberto');
-  renderizarPendencias(listaPendenciasGlobal);
-  setTimeout(() => {
-    document.getElementById(`pcard-${idx}`).classList.add('aberta');
-  }, 50);
+  const payload = {
+    action:            'updatePendencia',
+    linha:             linha,
+    numPedido:         document.getElementById(`ed_pedido_${idx}`).value.trim(),
+    nomeCliente:       document.getElementById(`ed_nome_${idx}`).value.trim(),
+    telefone:          document.getElementById(`ed_tel_${idx}`).value.trim(),
+    canalVenda:        document.getElementById(`ed_canal_${idx}`).value,
+    transportadora:    document.getElementById(`ed_transp_${idx}`).value,
+    motivoTroca:       document.getElementById(`ed_motivo_${idx}`).value,
+    produtoCorreto:    document.getElementById(`ed_correto_${idx}`).value,
+    produtosRecebidos: document.getElementById(`ed_pecas_${idx}`).value.trim(),
+    observacao:        document.getElementById(`ed_obs_${idx}`).value.trim(),
+    statusPendencia:   document.getElementById(`ed_status_${idx}`).value
+  };
+
+  try {
+    const resp = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    const result = await resp.json();
+
+    if (result.ok) {
+      // Atualiza o objeto localmente para refletir a mudança
+      p.NUM_PEDIDO         = payload.numPedido;
+      p.NOME_CLIENTE       = payload.nomeCliente;
+      p.TELEFONE           = payload.telefone;
+      p.CANAL_VENDA        = payload.canalVenda;
+      p.TRANSPORTADORA     = payload.transportadora;
+      p.MOTIVO_TROCA       = payload.motivoTroca;
+      p.PRODUTO_CORRETO    = payload.produtoCorreto;
+      p.PRODUTOS_RECEBIDOS = payload.produtosRecebidos;
+      p.OBSERVACAO         = payload.observacao;
+      p.STATUS_PENDENCIA   = payload.statusPendencia;
+
+      document.getElementById(`editar-${idx}`).classList.remove('aberto');
+      renderizarPendencias(listaPendenciasGlobal); // Renderiza novamente para atualizar a UI
+      setTimeout(() => {
+        document.getElementById(`pcard-${idx}`).classList.add('aberta'); // Mantém o card aberto
+      }, 50);
+      adicionarAoHistorico('pendencias', `Pendência ${p.NUM_PEDIDO} editada.`);
+    } else {
+      showAlert(`erroResolver-${idx}`, 'Erro ao salvar edição: ' + (result.error || 'desconhecido'));
+    }
+  } catch (e) {
+    showAlert(`erroResolver-${idx}`, 'Erro de conexão ao salvar edição.');
+  }
 }
 
 function toggleResolver(idx) {
@@ -948,7 +1133,8 @@ function toggleResolver(idx) {
   rs.classList.toggle('aberto');
 }
 
-async function confirmarResolucao(idx, linha) {
+/* ===== MODAL DE CONFIRMAÇÃO ===== */
+function showConfirmModal(idx) {
   const p = listaPendenciasGlobal.find((_, i) => i === idx);
   if (!p) return;
 
@@ -957,7 +1143,7 @@ async function confirmarResolucao(idx, linha) {
   const errEl       = document.getElementById(`erroResolver-${idx}`);
 
   if (!responsavel) {
-    errEl.textContent = 'Selecione o responsável antes de confirmar.';
+    errEl.textContent = 'Selecione o responsável pelo frete antes de confirmar.';
     errEl.style.display = 'block';
     setTimeout(() => { errEl.style.display = 'none'; }, 4000);
     return;
@@ -985,6 +1171,40 @@ async function confirmarResolucao(idx, linha) {
     return;
   }
 
+  pendenciaParaResolver = {
+    idx: idx,
+    linha: p._linha,
+    responsavel: responsavel,
+    obsResolver: obsResolver,
+    pendencia: p
+  };
+
+  document.getElementById('modalPedido').textContent = p.NUM_PEDIDO || '—';
+  document.getElementById('confirmModal').style.display = 'flex';
+}
+
+function hideConfirmModal() {
+  document.getElementById('confirmModal').style.display = 'none';
+  pendenciaParaResolver = null;
+}
+
+document.getElementById('btnConfirmarResolucao').addEventListener('click', () => {
+  if (pendenciaParaResolver) {
+    confirmarResolucao(
+      pendenciaParaResolver.idx,
+      pendenciaParaResolver.linha,
+      pendenciaParaResolver.execucao, // Removido, não é mais necessário
+      pendenciaParaResolver.responsavel,
+      pendenciaParaResolver.obsResolver
+    );
+    hideConfirmModal();
+  }
+});
+
+async function confirmarResolucao(idx, linha, responsavel, obsResolver) {
+  const p = listaPendenciasGlobal.find((_, i) => i === idx);
+  if (!p) return;
+
   const payload = {
     action:            'resolverPendencia',
     data:              p.DATA || dataHoje(),
@@ -998,7 +1218,8 @@ async function confirmarResolucao(idx, linha) {
     motivoTroca:       p.MOTIVO_TROCA,
     produtoCorreto:    p.PRODUTO_CORRETO,
     produtosRecebidos: p.PRODUTOS_RECEBIDOS,
-    observacao:        obsResolver || p.OBSERVACAO || ''
+    observacao:        obsResolver || p.OBSERVACAO || '',
+    statusPendencia:   'Concluído' // Status final ao resolver
   };
 
   try {
@@ -1017,19 +1238,245 @@ async function confirmarResolucao(idx, linha) {
         renderizarPendencias(listaPendenciasGlobal);
         atualizarBadgePendencias();
       }, 400);
+      adicionarAoHistorico('pendencias', `Pendência ${p.NUM_PEDIDO} resolvida.`);
     } else {
-      errEl.textContent = 'Erro: ' + (result.error || 'desconhecido');
-      errEl.style.display = 'block';
+      showAlert(`erroResolver-${idx}`, 'Erro: ' + (result.error || 'desconhecido'));
     }
   } catch(e) {
-    errEl.textContent = 'Erro de conexão.';
-    errEl.style.display = 'block';
+    showAlert(`erroResolver-${idx}`, 'Erro de conexão.');
   }
 }
 
-/* ===== INIT ===== */
+/* ===== FILTROS E HISTÓRICO DE ENVIOS E RECEBIDOS (NOVA SEÇÃO) ===== */
+
+// Adiciona a nova seção de histórico e filtros para Envio
+document.addEventListener('DOMContentLoaded', () => {
+  const formEnvio = document.getElementById('formEnvio');
+  const historicoEnvioHtml = `
+    <div class="card" style="margin-top: 2rem;">
+      <div class="card-title">Histórico de Envios</div>
+      <div class="filtros-wrap">
+        <div class="form-group full busca-texto">
+          <label for="filtroEnvioBusca">Buscar (Pedido, Cliente, Telefone)</label>
+          <input type="text" id="filtroEnvioBusca" placeholder="Ex: 12345, João Silva" oninput="aplicarFiltrosEnvio()">
+        </div>
+        <div class="form-group">
+          <label for="filtroEnvioDataInicio">Data Início</label>
+          <input type="date" id="filtroEnvioDataInicio" onchange="aplicarFiltrosEnvio()">
+        </div>
+        <div class="form-group">
+          <label for="filtroEnvioDataFim">Data Fim</label>
+          <input type="date" id="filtroEnvioDataFim" onchange="aplicarFiltrosEnvio()">
+        </div>
+        <div class="form-group">
+          <label for="filtroEnvioCanal">Canal de Venda</label>
+          <select id="filtroEnvioCanal" onchange="aplicarFiltrosEnvio()">
+            <option value="">Todos</option>
+            <option>Brunx Varejo</option>
+            <option>Brunx Atacado</option>
+            <option>Liso&Co</option>
+          </select>
+        </div>
+      </div>
+      <div id="historicoEnviosCompleto">
+        <p class="historico-vazio">Carregando histórico...</p>
+      </div>
+    </div>
+  `;
+  formEnvio.insertAdjacentHTML('afterend', historicoEnvioHtml);
+
+  // Adiciona a nova seção de histórico e filtros para Recebidos
+  const formRecebidos = document.getElementById('formRecebidos');
+  const historicoRecebidosHtml = `
+    <div class="card" style="margin-top: 2rem;">
+      <div class="card-title">Histórico de Recebidos</div>
+      <div class="filtros-wrap">
+        <div class="form-group full busca-texto">
+          <label for="filtroRecebidosBusca">Buscar (Pedido, Cliente, Telefone)</label>
+          <input type="text" id="filtroRecebidosBusca" placeholder="Ex: 12345, Maria Souza" oninput="aplicarFiltrosRecebidos()">
+        </div>
+        <div class="form-group">
+          <label for="filtroRecebidosDataInicio">Data Início</label>
+          <input type="date" id="filtroRecebidosDataInicio" onchange="aplicarFiltrosRecebidos()">
+        </div>
+        <div class="form-group">
+          <label for="filtroRecebidosDataFim">Data Fim</label>
+          <input type="date" id="filtroRecebidosDataFim" onchange="aplicarFiltrosRecebidos()">
+        </div>
+        <div class="form-group">
+          <label for="filtroRecebidosCanal">Canal de Venda</label>
+          <select id="filtroRecebidosCanal" onchange="aplicarFiltrosRecebidos()">
+            <option value="">Todos</option>
+            <option>Brunx Varejo</option>
+            <option>Brunx Atacado</option>
+            <option>Liso&Co</option>
+            <option>Mercado Livre Brunx</option>
+            <option>Mercado Livre VST</option>
+            <option>Mercado Livre Over</option>
+          </select>
+        </div>
+      </div>
+      <div id="historicoRecebidosCompleto">
+        <p class="historico-vazio">Carregando histórico...</p>
+      </div>
+    </div>
+  `;
+  formRecebidos.insertAdjacentHTML('afterend', historicoRecebidosHtml);
+});
+
+let listaEnviosCompleta = [];
+let listaRecebidosCompleta = [];
+
+async function carregarDadosParaFiltros(tipo) {
+  const containerId = tipo === 'envio' ? 'historicoEnviosCompleto' : 'historicoRecebidosCompleto';
+  const action = tipo === 'envio' ? 'getEnvios' : 'getRecebidos';
+  const listaGlobal = tipo === 'envio' ? 'listaEnviosCompleta' : 'listaRecebidosCompleta';
+  const container = document.getElementById(containerId);
+
+  container.innerHTML = '<p class="historico-vazio">Carregando dados completos...</p>';
+  try {
+    const resp = await fetch(`${SCRIPT_URL}?action=${action}`);
+    const data = await resp.json();
+    window[listaGlobal] = data[tipo] || [];
+    if (tipo === 'envio') {
+      renderizarHistoricoCompletoEnvio(window[listaGlobal]);
+    } else {
+      renderizarHistoricoCompletoRecebidos(window[listaGlobal]);
+    }
+  } catch(e) {
+    container.innerHTML = `<p class="historico-vazio" style="color:var(--red);">Erro ao carregar histórico completo de ${tipo}.</p>`;
+  }
+}
+
+function aplicarFiltrosEnvio() {
+  const termoBusca = document.getElementById('filtroEnvioBusca').value.toLowerCase().trim();
+  const dataInicio = document.getElementById('filtroEnvioDataInicio').value;
+  const dataFim    = document.getElementById('filtroEnvioDataFim').value;
+  const canal      = document.getElementById('filtroEnvioCanal').value;
+
+  let filtrada = listaEnviosCompleta.filter(e => {
+    const dataRegistro = new Date(e.DATA);
+    const dataInicioObj = dataInicio ? new Date(dataInicio) : null;
+    const dataFimObj    = dataFim    ? new Date(dataFim)    : null;
+
+    // Ajuste para considerar o dia inteiro na data final
+    if (dataFimObj) dataFimObj.setDate(dataFimObj.getDate() + 1);
+
+    const matchBusca = termoBusca === '' ||
+      (e.NUM_PEDIDO    || '').toLowerCase().includes(termoBusca) ||
+      (e.CLIENTE       || '').toLowerCase().includes(termoBusca) ||
+      (e.TELEFONE      || '').toLowerCase().includes(termoBusca);
+
+    const matchData = (!dataInicioObj || dataRegistro >= dataInicioObj) &&
+                      (!dataFimObj    || dataRegistro < dataFimObj);
+
+    const matchCanal = canal === '' || e.CANAL_VENDA === canal;
+
+    return matchBusca && matchData && matchCanal;
+  });
+
+  renderizarHistoricoCompletoEnvio(filtrada);
+}
+
+function renderizarHistoricoCompletoEnvio(lista) {
+  const container = document.getElementById('historicoEnviosCompleto');
+  if (!lista.length) {
+    container.innerHTML = '<p class="historico-vazio">Nenhum envio encontrado com os filtros aplicados.</p>';
+    return;
+  }
+  container.innerHTML = lista.map(e => `
+    <div class="pendencia-linha" style="border-left-color:#166534;">
+      <div class="pendencia-resumo" style="cursor:default;">
+        <div class="pendencia-resumo-info">
+          <strong>Pedido ${e.NUM_PEDIDO || '—'}</strong>
+          <span>${e.CLIENTE || '—'}</span>
+          <span>${formatarData(e.DATA)}</span>
+          <span>${e.CANAL_VENDA || '—'}</span>
+        </div>
+        <span class="pendencia-badge" style="background:#D1FAE5;border-color:#6EE7B7;color:#065F46;">Envio</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function aplicarFiltrosRecebidos() {
+  const termoBusca = document.getElementById('filtroRecebidosBusca').value.toLowerCase().trim();
+  const dataInicio = document.getElementById('filtroRecebidosDataInicio').value;
+  const dataFim    = document.getElementById('filtroRecebidosDataFim').value;
+  const canal      = document.getElementById('filtroRecebidosCanal').value;
+
+  let filtrada = listaRecebidosCompleta.filter(r => {
+    const dataRegistro = new Date(r.DATA);
+    const dataInicioObj = dataInicio ? new Date(dataInicio) : null;
+    const dataFimObj    = dataFim    ? new Date(dataFim)    : null;
+
+    // Ajuste para considerar o dia inteiro na data final
+    if (dataFimObj) dataFimObj.setDate(dataFimObj.getDate() + 1);
+
+    const matchBusca = termoBusca === '' ||
+      (r.NUM_PEDIDO    || '').toLowerCase().includes(termoBusca) ||
+      (r.NOME_CLIENTE  || '').toLowerCase().includes(termoBusca) ||
+      (r.TELEFONE      || '').toLowerCase().includes(termoBusca);
+
+    const matchData = (!dataInicioObj || dataRegistro >= dataInicioObj) &&
+                      (!dataFimObj    || dataRegistro < dataFimObj);
+
+    const matchCanal = canal === '' || r.CANAL_VENDA === canal;
+
+    return matchBusca && matchData && matchCanal;
+  });
+
+  renderizarHistoricoCompletoRecebidos(filtrada);
+}
+
+function renderizarHistoricoCompletoRecebidos(lista) {
+  const container = document.getElementById('historicoRecebidosCompleto');
+  if (!lista.length) {
+    container.innerHTML = '<p class="historico-vazio">Nenhum recebido encontrado com os filtros aplicados.</p>';
+    return;
+  }
+  container.innerHTML = lista.map(r => `
+    <div class="pendencia-linha" style="border-left-color:#059669;">
+      <div class="pendencia-resumo" style="cursor:default;">
+        <div class="pendencia-resumo-info">
+          <strong>Pedido ${r.NUM_PEDIDO || '—'}</strong>
+          <span>${r.NOME_CLIENTE || '—'}</span>
+          <span>${formatarData(r.DATA)}</span>
+          <span>${r.CANAL_VENDA || '—'}</span>
+        </div>
+        <span class="pendencia-badge" style="background:#D1FAE5;border-color:#6EE7B7;color:#065F46;">Recebido</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ===== INIT (AJUSTE) ===== */
 window.addEventListener('DOMContentLoaded', () => {
   atualizarBadgePendencias();
+  renderizarHistorico('envio');
+  renderizarHistorico('reembolso');
+  renderizarHistorico('recebidos');
+
+  // Carregar dados completos para os filtros quando as seções forem ativadas
+  document.getElementById('mainNav').addEventListener('click', (event) => {
+    const target = event.target;
+    if (target.tagName === 'BUTTON') {
+      const sectionId = target.getAttribute('onclick').match(/'([^']+)'/)[1];
+      if (sectionId === 'envio') {
+        carregarDadosParaFiltros('envio');
+      } else if (sectionId === 'recebidos') {
+        carregarDadosParaFiltros('recebidos');
+      }
+    }
+  });
+
+  // Carregar dados para a seção ativa inicialmente (se for Envio ou Recebidos)
+  const activeSectionId = document.querySelector('.section.active').id;
+  if (activeSectionId === 'envio') {
+    carregarDadosParaFiltros('envio');
+  } else if (activeSectionId === 'recebidos') {
+    carregarDadosParaFiltros('recebidos');
+  }
 });
 </script>
 </body>
