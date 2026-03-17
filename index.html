@@ -1,413 +1,909 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- SEUS ESTILOS CSS AQUI -->
+<meta charset="UTF-8">
+<title>BRUNX – SAC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --red: #AA0000; --red-hover: #880000; --black: #111111;
+    --gray-dark: #333333; --gray-mid: #666666; --gray-light: #F4F4F4;
+    --white: #FFFFFF; --border: #DDDDDD;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08); --radius: 6px;
+    --font: 'Segoe UI', Arial, sans-serif;
+  }
+  html, body { height: 100%; }
+  body { font-family: var(--font); background: var(--gray-light); color: var(--black); min-height: 100vh; display: flex; flex-direction: column; }
+
+  header { background: var(--white); border-bottom: 3px solid var(--red); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow); z-index: 100; }
+  header img { height: 42px; width: auto; }
+  .header-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-mid); }
+  .header-user { font-size: 0.8rem; color: var(--gray-mid); display: flex; align-items: center; gap: 0.5rem; }
+
+  nav { background: var(--white); border-bottom: 1px solid var(--border); display: flex; padding: 0 2rem; overflow-x: auto; z-index: 99; flex-shrink: 0; }
+  nav button { background: none; border: none; border-bottom: 3px solid transparent; padding: 1rem 1.5rem; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gray-mid); cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  nav button:hover { color: var(--black); border-bottom-color: var(--border); }
+  nav button.active { color: var(--red); border-bottom-color: var(--red); }
+  .nav-badge { display: none; align-items: center; justify-content: center; background: var(--red); color: var(--white); font-size: 0.65rem; font-weight: 700; border-radius: 999px; min-width: 18px; height: 18px; padding: 0 5px; margin-left: 6px; vertical-align: middle; }
+
+  main { flex: 1; padding: 2rem; max-width: 900px; width: 100%; margin: 0 auto; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 2rem; margin-bottom: 1.5rem; }
+  .card-title { font-size: 1rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--red); display: flex; align-items: center; gap: 0.5rem; }
+  .card-title::before { content: ''; display: inline-block; width: 4px; height: 18px; background: var(--red); border-radius: 2px; }
+
+  form { display: grid; gap: 1.2rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-dark); }
+  label .opcional { font-weight: 400; color: var(--gray-mid); text-transform: none; letter-spacing: 0; font-size: 0.75rem; }
+  input, select, textarea { width: 100%; padding: 0.55rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; font-family: var(--font); color: var(--black); background: var(--white); transition: border-color 0.2s, box-shadow 0.2s; appearance: none; -webkit-appearance: none; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2rem; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(170,0,0,0.08); }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .toggle-btn-group { display: flex; gap: 0.75rem; padding: 0.25rem 0; }
+  .toggle-btn-group button { flex: 1; padding: 0.55rem 1rem; border: 2px solid var(--border); border-radius: var(--radius); background: var(--white); color: var(--gray-mid); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .toggle-btn-group button.selected-sim { background: #166534; border-color: #166534; color: var(--white); }
+  .toggle-btn-group button.selected-nao { background: var(--red); border-color: var(--red); color: var(--white); }
+
+  .btn { padding: 0.65rem 1.5rem; border: none; border-radius: var(--radius); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+  .btn-primary { background: var(--red); color: var(--white); }
+  .btn-primary:hover { background: var(--red-hover); transform: translateY(-1px); }
+  .btn-secondary { background: var(--black); color: var(--white); }
+  .btn-secondary:hover { background: #333; transform: translateY(-1px); }
+  .btn-outline { background: none; border: 1px solid var(--border); color: var(--gray-dark); }
+  .btn-outline:hover { border-color: var(--red); color: var(--red); }
+  .btn-success { background: #166534; color: var(--white); }
+  .btn-success:hover { background: #14532d; transform: translateY(-1px); }
+  .btn-warning { background: #B45309; color: var(--white); }
+  .btn-warning:hover { background: #92400E; transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+  .form-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+
+  .alert { padding: 0.7rem 1rem; border-radius: var(--radius); font-size: 0.85rem; font-weight: 600; margin-top: 0.5rem; display: none; }
+  .alert-success { background: #F0FFF4; border: 1px solid #86EFAC; color: #166534; }
+  .alert-error   { background: #FFF0F0; border: 1px solid #FECACA; color: #991B1B; }
+  .alert-warning { background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; }
+
+  /* HISTÓRICO DE ATIVIDADES */
+  .historico-atividades { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+  .historico-atividades h3 { font-size: 0.9rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-dark); margin-bottom: 1rem; }
+  .historico-lista { list-style: none; padding: 0; margin: 0; }
+  .historico-item { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.75rem 1rem; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--gray-dark); display: flex; justify-content: space-between; align-items: center; }
+  .historico-item .data { font-size: 0.75rem; color: var(--gray-mid); }
+  .historico-vazio { text-align: center; padding: 1rem; color: var(--gray-mid); font-size: 0.85rem; }
+
+  /* FILTROS */
+  .filtros-wrap { margin-bottom: 1.25rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .filtros-wrap .form-group { margin-bottom: 0; }
+  .filtros-wrap input, .filtros-wrap select { width: 100%; }
+  .filtros-wrap .busca-texto { grid-column: 1 / -1; }
+
+  /* PENDÊNCIAS */
+  .busca-wrap { margin-bottom: 1.25rem; }
+  .busca-wrap input { padding: 0.6rem 0.9rem; border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; width: 100%; }
+  .busca-wrap input:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(170,0,0,0.08); }
+
+  .pendencias-vazio { text-align: center; padding: 3rem 2rem; color: var(--gray-mid); }
+  .pendencias-vazio .icone { font-size: 3rem; margin-bottom: 1rem; display: block; }
+  .pendencias-vazio h3 { font-size: 1rem; font-weight: 700; color: var(--black); margin-bottom: 0.5rem; }
+
+  .pendencia-linha { background: var(--white); border: 1px solid var(--border); border-left: 4px solid #F59E0B; border-radius: var(--radius); margin-bottom: 0.5rem; overflow: hidden; transition: box-shadow 0.2s; }
+  .pendencia-linha:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+
+  .pendencia-resumo { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.25rem; cursor: pointer; gap: 1rem; user-select: none; }
+  .pendencia-resumo-info { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+  .pendencia-resumo-info span { font-size: 0.82rem; color: var(--gray-dark); }
+  .pendencia-resumo-info strong { font-size: 0.85rem; color: var(--black); font-weight: 700; }
+  .pendencia-badge { background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 999px; white-space: nowrap; }
+  .pendencia-badge.status-aguardando { background: #F0F9FF; border-color: #93C5FD; color: #2563EB; }
+  .pendencia-badge.status-em-processo { background: #FFFBEB; border-color: #FCD34D; color: #92400E; }
+
+  .pendencia-chevron { font-size: 0.75rem; color: var(--gray-mid); transition: transform 0.2s; flex-shrink: 0; }
+  .pendencia-linha.aberta .pendencia-chevron { transform: rotate(180deg); }
+
+  .pendencia-corpo { display: none; padding: 1.25rem; border-top: 1px solid var(--border); background: var(--gray-light); }
+  .pendencia-linha.aberta .pendencia-corpo { display: block; }
+
+  .pendencia-infos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+  .pendencia-info-item { display: flex; flex-direction: column; gap: 0.2rem; }
+  .pendencia-info-item span:first-child { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-mid); }
+  .pendencia-info-item span:last-child { font-size: 0.85rem; color: var(--black); font-weight: 500; }
+
+  .pendencia-editar { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; display: none; margin-bottom: 1rem; }
+  .pendencia-editar.aberto { display: block; }
+  .pendencia-editar h4 { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-dark); margin-bottom: 0.75rem; }
+  .editar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+  .pendencia-resolver { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; display: none; margin-bottom: 1rem; }
+  .pendencia-resolver.aberto { display: block; }
+  .pendencia-resolver h4 { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-dark); margin-bottom: 0.75rem; }
+  .resolver-row { display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap; }
+  .resolver-row .form-group { flex: 1; min-width: 160px; }
+
+  .pendencia-actions { display: flex; gap: 0.75rem; justify-content: flex-end; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+
+  /* MODAL DE CONFIRMAÇÃO */
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-content { background: var(--white); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow); max-width: 450px; width: 90%; text-align: center; }
+  .modal-content h3 { font-size: 1.1rem; color: var(--black); margin-bottom: 1rem; }
+  .modal-content p { font-size: 0.9rem; color: var(--gray-dark); margin-bottom: 1.5rem; }
+  .modal-actions { display: flex; justify-content: center; gap: 1rem; }
+
+  footer { background: var(--white); border-top: 1px solid var(--border); padding: 0.75rem 2rem; text-align: center; font-size: 0.72rem; color: var(--gray-mid); letter-spacing: 0.05em; flex-shrink: 0; }
+
+  @media (max-width: 640px) {
+    main { padding: 1rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .editar-grid { grid-template-columns: 1fr; }
+    .pendencia-infos { grid-template-columns: 1fr 1fr; }
+    nav button { padding: 0.8rem 1rem; font-size: 0.75rem; }
+    header { padding: 0.75rem 1rem; }
+    .card { padding: 1.25rem; }
+    .header-title { display: none; }
+    .pendencia-resumo-info { gap: 0.75rem; }
+    .filtros-wrap { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body>
 
-  <!-- SEU HEADER AQUI -->
-  <!-- SUA NAV AQUI -->
-  <main>
-    <!-- SUAS SEÇÕES (ENVIO, REEMBOLSO, RECEBIDOS, PENDÊNCIAS) AQUI -->
-  </main>
-  <!-- SEU FOOTER AQUI -->
-  <!-- SUA MODAL DE CONFIRMAÇÃO AQUI -->
+<!--
+===========================================
+  LOGIN — DESABILITADO TEMPORARIAMENTE
+  Para reativar: descomentar este bloco
+  e reativar a lógica de login no JS
+===========================================
 
-  <!-- ======================================================= -->
-  <!-- AQUI É ONDE O BLOCO <script> DEVE ESTAR, ANTES DO </body> -->
-  <!-- ======================================================= -->
-  <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfafNFGUPJnKaSgwL6URt5FMeqtC6Svjgz5G1EEv3WkdiMMzrV_jRXmCorvRAa9UzkBQ/exec';
+<div id="loginOverlay">
+  <div class="login-card">
+    <div class="logo-wrap"><img src="LOGO_BRUNX_PNG.png" alt="BRUNX"></div>
+    <h2>Sistema de Atendimento ao Cliente</h2>
+    <form onsubmit="return false;">
+      <div class="form-group">
+        <label for="loginUser">Usuário</label>
+        <input type="text" id="loginUser" placeholder="Digite seu usuário" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="loginPass">Senha</label>
+        <input type="password" id="loginPass" placeholder="Digite sua senha" autocomplete="current-password">
+      </div>
+      <label class="remember-row" id="rememberRow" onclick="toggleLembrar()">
+        <input type="checkbox" id="lembrarMe">
+        <span class="checkbox-custom">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <polyline points="2,6 5,9 10,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="remember-label">Lembrar-me neste dispositivo</span>
+      </label>
+      <div class="login-error" id="loginError"></div>
+      <button type="button" class="btn btn-primary" style="width:100%;margin-top:0.5rem;" onclick="tentarLogin()">Entrar</button>
+    </form>
+  </div>
+</div>
+-->
 
-    /* ===== NAVEGAÇÃO ===== */
-    function showSection(id, btn) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('#mainNav button').forEach(b => b.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      if (btn) btn.classList.add('active');
-      if (id === 'pendencias') carregarPendencias();
-      if (id === 'envio') carregarHistoricoEnvio();
-      if (id === 'recebidos') carregarHistoricoRecebidos();
+<header>
+  <img src="LOGO_BRUNX_PNG.png" alt="BRUNX">
+  <span class="header-title">SAC — Sistema de Atendimento</span>
+</header>
+
+<nav id="mainNav">
+  <button class="active" onclick="showSection('envio', this)">Envio</button>
+  <button onclick="showSection('reembolso', this)">Reembolso</button>
+  <button onclick="showSection('recebidos', this)">Recebidos</button>
+  <button onclick="showSection('pendencias', this)">
+    Pendências <span class="nav-badge" id="navBadge"></span>
+  </button>
+  <!--
+  <button onclick="showSection('dashboard', this)">Dashboard</button>
+  -->
+</nav>
+
+<main>
+
+  <!-- ENVIO -->
+  <section id="envio" class="section active">
+    <div class="card">
+      <div class="card-title">Registro de Envio</div>
+      <form id="formEnvio" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Canal de Venda</label>
+            <select id="e_canal">
+              <option value="">Selecione</option>
+              <option>Brunx Varejo</option>
+              <option>Brunx Atacado</option>
+              <option>Liso&Co</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Cliente</label>
+            <input type="text" id="e_cliente" placeholder="Nome do cliente">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="tel" id="e_tel" placeholder="(11)91234-5678" maxlength="14" oninput="mascaraTelefone(this)">
+          </div>
+          <div class="form-group">
+            <label>Número do Pedido</label>
+            <input type="text" id="e_pedido" placeholder="Ex: 123456" onblur="verificarPedidoAoSair(this.value)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo de Falha</label>
+            <select id="e_falha">
+              <option value="">Selecione</option>
+              <option>Erro interno</option>
+              <option>Estoque</option>
+              <option>Logística</option>
+              <option>Qualidade do produto</option>
+              <option>Outros</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Setor Responsável</label>
+            <select id="e_setor">
+              <option value="">Selecione</option>
+              <option>Atendimento</option>
+              <option>Correios</option>
+              <option>Expedição</option>
+              <option>Operacional</option>
+              <option>Produção</option>
+              <option>Revisão</option>
+              <option>Smart Envios</option>
+              <option>Outros</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Solução</label>
+            <select id="e_solucao">
+              <option value="">Selecione</option>
+              <option>Envio</option>
+              <option>Reenvio</option>
+              <option>Reembolso</option>
+              <option>Troca</option>
+              <option>Brinde</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Observação <span class="opcional">(opcional)</span></label>
+            <input type="text" id="e_obs" placeholder="Informações adicionais">
+          </div>
+        </div>
+        <div class="alert alert-warning" id="msgEnvioDupInline">⚠️ Este número de pedido já está registrado. Registro bloqueado.</div>
+        <div class="alert alert-success" id="msgEnvioOk">✔ Registro salvo com sucesso.</div>
+        <div class="alert alert-error" id="msgEnvioErr"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" onclick="limparEnvio()">Limpar</button>
+          <button type="button" class="btn btn-primary" id="btnRegistrarEnvio" onclick="submitEnvio()">Registrar</button>
+        </div>
+      </form>
+      <div class="historico-atividades">
+        <h3>Últimas 5 Ações (Envio)</h3>
+        <ul id="historicoEnvio" class="historico-lista">
+          <li class="historico-vazio">Nenhuma ação recente.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- REEMBOLSO -->
+  <section id="reembolso" class="section">
+    <div class="card">
+      <div class="card-title">Registro de Reembolso</div>
+      <form id="formReembolso" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cliente</label>
+            <input type="text" id="r_cliente" placeholder="Nome do cliente">
+          </div>
+          <div class="form-group">
+            <label>Loja</label>
+            <select id="r_loja">
+              <option value="">Selecione</option>
+              <option>Brunx Varejo</option>
+              <option>Brunx Atacado</option>
+              <option>Liso&Co</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo de Reembolso</label>
+            <select id="r_tipo">
+              <option value="">Selecione</option>
+              <option>Reembolso total</option>
+              <option>Reembolso parcial</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Valor (R$)</label>
+            <input type="text" id="r_valor" placeholder="123,45">
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Motivo</label>
+          <select id="r_motivo">
+            <option value="">Selecione</option>
+            <option>Erro interno (expedição/produto)</option>
+            <option>Falha de estoque / Item indisponível</option>
+            <option>Falha de sistema / site / preço</option>
+            <option>Insatisfação / arrependimento do cliente</option>
+            <option>Outros / casos especiais</option>
+            <option>Problema de entrega / transportadora</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>NF de Venda</label>
+            <input type="text" id="r_nfVenda">
+          </div>
+          <div class="form-group">
+            <label>NF de Devolução</label>
+            <input type="text" id="r_nfDevol">
+          </div>
+        </div>
+        <div class="alert alert-success" id="msgReembOk">✔ Registro salvo com sucesso.</div>
+        <div class="alert alert-error" id="msgReembErr"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" onclick="document.getElementById('formReembolso').reset()">Limpar</button>
+          <button type="button" class="btn btn-primary" onclick="submitReembolso()">Registrar</button>
+        </div>
+      </form>
+      <div class="historico-atividades">
+        <h3>Últimas 5 Ações (Reembolso)</h3>
+        <ul id="historicoReembolso" class="historico-lista">
+          <li class="historico-vazio">Nenhuma ação recente.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECEBIDOS -->
+  <section id="recebidos" class="section">
+    <div class="card">
+      <div class="card-title">Registro de Recebidos</div>
+      <form id="formRecebidos" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Responsável pelo Frete</label>
+            <select id="rc_resp" onchange="toggleObrigatoriedadeRecebidos()">
+              <option value="">Selecione</option>
+              <option>Fábrica</option>
+              <option>Cliente</option>
+              <option>Em processo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Canal de Venda</label>
+            <select id="rc_canal">
+              <option value="">Selecione</option>
+              <option>Brunx Varejo</option>
+              <option>Brunx Atacado</option>
+              <option>Liso&Co</option>
+              <option>Mercado Livre Brunx</option>
+              <option>Mercado Livre VST</option>
+              <option>Mercado Livre Over</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Número do Pedido</label>
+            <input type="text" id="rc_pedido" placeholder="Ex: 123456">
+          </div>
+          <div class="form-group">
+            <label>Nome do Cliente</label>
+            <input type="text" id="rc_nome" placeholder="Nome completo">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="tel" id="rc_tel" placeholder="(11)91234-5678" maxlength="14" oninput="mascaraTelefone(this)">
+          </div>
+          <div class="form-group">
+            <label>Transportadora</label>
+            <select id="rc_transp">
+              <option value="">Selecione</option>
+              <option>PAC / Sedex</option>
+              <option>Loggi</option>
+              <option>Jadlog</option>
+              <option>J&T</option>
+              <option>Buslog</option>
+              <option>Gol</option>
+              <option>Mercado Livre</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Motivo da Troca</label>
+            <select id="rc_motivo">
+              <option value="">Selecione</option>
+              <option>Troca de tamanho</option>
+              <option>Envio errado</option>
+              <option>Peças danificadas</option>
+              <option>Não gostou das peças</option>
+              <option>Problema transportadora</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Produto Correto?</label>
+            <input type="hidden" id="rc_correto">
+            <div class="toggle-btn-group">
+              <button type="button" id="btnSim" onclick="selecionarCorreto('Sim')">Sim</button>
+              <button type="button" id="btnNao" onclick="selecionarCorreto('Não')">Não</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Peças Recebidas</label>
+          <input type="text" id="rc_pecas" placeholder="Ex: 2 camisetas P, 1 calça M">
+        </div>
+        <div class="form-group full">
+          <label>Observação <span class="opcional">(opcional)</span></label>
+          <input type="text" id="rc_obs" placeholder="Informações adicionais">
+        </div>
+        <div class="alert alert-success" id="msgRecebOk">✔ Registro salvo com sucesso.</div>
+        <div class="alert alert-warning" id="msgRecebPendencia">⚠️ Pendência criada com sucesso.</div>
+        <div class="alert alert-error" id="msgRecebErr"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" onclick="limparRecebidos()">Limpar</button>
+          <button type="button" class="btn btn-primary" onclick="submitRecebidos()">Registrar</button>
+        </div>
+      </form>
+      <div class="historico-atividades">
+        <h3>Últimas 5 Ações (Recebidos)</h3>
+        <ul id="historicoRecebidos" class="historico-lista">
+          <li class="historico-vazio">Nenhuma ação recente.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PENDÊNCIAS -->
+  <section id="pendencias" class="section">
+    <div class="card">
+      <div class="card-title">Pendências em Aberto</div>
+      <div class="busca-wrap">
+        <input type="text" id="buscaPendencia" placeholder="Buscar por pedido, cliente ou telefone..." oninput="filtrarPendencias()">
+      </div>
+      <div id="pendenciasContainer">
+        <p class="pendencias-vazio">Carregando pendências...</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-content">
+    <h3>Confirmar Resolução de Pendência</h3>
+    <p>Você está prestes a resolver a pendência do pedido <strong id="modalPedido"></strong>. Esta ação é irreversível.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="hideConfirmModal()">Cancelar</button>
+      <button class="btn btn-success" id="btnConfirmarResolucao">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  BRUNX © 2026
+</footer>
+
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfafNFGUPJnKaSgwL6URt5FMeqtC6Svjgz5G1EEv3WkdiMMzrV_jRXmCorvRAa9UzkBQ/exec';
+
+  /* ===== NAVEGAÇÃO ===== */
+  function showSection(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('#mainNav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (btn) btn.classList.add('active');
+
+    // Carregar dados e histórico ao mudar de seção
+    if (id === 'envio') {
+      carregarHistoricoEnvio();
+      carregarDadosParaFiltros('envio'); // Carrega dados completos para filtros
+    } else if (id === 'reembolso') {
+      // carregarHistoricoReembolso(); // Não há função específica para histórico de reembolso no script, mas o histórico local funciona
+    } else if (id === 'recebidos') {
+      carregarHistoricoRecebidos();
+      carregarDadosParaFiltros('recebidos'); // Carrega dados completos para filtros
+    } else if (id === 'pendencias') {
+      carregarPendencias();
     }
+  }
 
-    /* ===== MÁSCARA DE TELEFONE ===== */
-    function mascaraTelefone(input) {
-      let v = input.value.replace(/\D/g, '');
-      if (v.length > 11) v = v.slice(0, 11);
-      if (v.length <= 2) {
-        input.value = v.length ? '(' + v : '';
-      } else if (v.length <= 7) {
-        input.value = '(' + v.slice(0, 2) + ')' + v.slice(2);
-      } else {
-        input.value = '(' + v.slice(0, 2) + ')' + v.slice(2, 7) + '-' + v.slice(7);
-      }
+  /* ===== MÁSCARA DE TELEFONE ===== */
+  function mascaraTelefone(input) {
+    let v = input.value.replace(/\D/g, '');
+    if (v.length > 11) v = v.slice(0, 11);
+    if (v.length <= 2) {
+      input.value = v.length ? '(' + v : '';
+    } else if (v.length <= 7) {
+      input.value = '(' + v.slice(0, 2) + ')' + v.slice(2);
+    } else {
+      input.value = '(' + v.slice(0, 2) + ')' + v.slice(2, 7) + '-' + v.slice(7);
     }
+  }
 
-    /* ===== DATA ===== */
-    function dataHoje() {
-      const d = new Date();
-      const dia  = String(d.getDate()).padStart(2, '0');
-      const mes  = String(d.getMonth() + 1).padStart(2, '0');
-      const ano  = d.getFullYear();
-      return `${dia}/${mes}/${ano}`;
-    }
+  /* ===== DATA ===== */
+  function dataHoje() {
+    const d = new Date();
+    const dia  = String(d.getDate()).padStart(2, '0');
+    const mes  = String(d.getMonth() + 1).padStart(2, '0');
+    const ano  = d.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+  }
 
-    function calcularDiasEmAberto(dataRegistro) {
-      if (!dataRegistro) return '—';
-      const [dia, mes, ano] = dataRegistro.split('/').map(Number);
-      const hoje = new Date();
-      const dataInicio = new Date(ano, mes - 1, dia); // Mês é 0-indexado
-      const diffTempo = Math.abs(hoje.getTime() - dataInicio.getTime());
-      const diffDias = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
-      return `${diffDias} dias`;
-    }
+  function calcularDiasEmAberto(dataRegistro) {
+    if (!dataRegistro) return '—';
+    const [dia, mes, ano] = dataRegistro.split('/').map(Number);
+    const dataInicio = new Date(ano, mes - 1, dia);
+    const hoje = new Date();
+    const diffTempo = Math.abs(hoje.getTime() - dataInicio.getTime());
+    const diffDias = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
+    return `${diffDias} dias`;
+  }
 
-    /* ===== UTILITÁRIOS ===== */
-    function showAlert(id, msg) {
-      const el = document.getElementById(id);
-      if (msg !== undefined) el.textContent = msg;
-      el.style.display = 'block';
-      setTimeout(() => { el.style.display = 'none'; }, 5000);
-    }
+  /* ===== UTILITÁRIOS ===== */
+  function showAlert(id, msg) {
+    const el = document.getElementById(id);
+    if (msg !== undefined) el.textContent = msg;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 5000);
+  }
 
-    function formatarData(val) {
-      if (!val) return '—';
-      // Correção da expressão regular: removido o '\n'
-      if (/
+  function formatarData(val) {
+    if (!val) return '—';
+    // CORREÇÃO: Expressão regular em uma única linha
+    if (/
 ^
 \d{2}\/\d{2}\/\d{4}
 $
 /.test(val)) return val;
-      const d = new Date(val);
-      if (isNaN(d)) return val;
-      const dia = String(d.getDate()).padStart(2, '0');
-      const mes = String(d.getMonth() + 1).padStart(2, '0');
-      return `${dia}/${mes}/${d.getFullYear()}`;
-    }
+    const d = new Date(val);
+    if (isNaN(d)) return val;
+    const dia = String(d.getDate()).padStart(2, '0');
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    return `${dia}/${mes}/${d.getFullYear()}`;
+  }
 
-    /* ===== HISTÓRICO DE ATIVIDADES (LOCAL) ===== */
-    const historicoAtividades = {
-      envio: [],
-      reembolso: [],
-      recebidos: []
+  /* ===== HISTÓRICO DE ATIVIDADES (LOCAL) ===== */
+  const historicoAtividades = {
+    envio: [],
+    reembolso: [],
+    recebidos: [],
+    pendencias: [] // Adicionado para pendências
+  };
+
+  function adicionarAoHistorico(tipo, mensagem) {
+    const agora = new Date();
+    const hora = String(agora.getHours()).padStart(2, '0');
+    const minuto = String(agora.getMinutes()).padStart(2, '0');
+    const item = {
+      mensagem: mensagem,
+      hora: `${hora}:${minuto}`
     };
 
-    function adicionarAoHistorico(tipo, mensagem) {
-      const agora = new Date();
-      const hora = String(agora.getHours()).padStart(2, '0');
-      const minuto = String(agora.getMinutes()).padStart(2, '0');
-      const item = {
-        mensagem: mensagem,
-        hora: `${hora}:${minuto}`
-      };
+    historicoAtividades[tipo].unshift(item); // Adiciona no início
+    if (historicoAtividades[tipo].length > 5) {
+      historicoAtividades[tipo].pop(); // Remove o mais antigo se exceder 5
+    }
+    renderizarHistorico(tipo);
+  }
 
-      historicoAtividades[tipo].unshift(item); // Adiciona no início
-      if (historicoAtividades[tipo].length > 5) {
-        historicoAtividades[tipo].pop(); // Remove o mais antigo se exceder 5
-      }
-      renderizarHistorico(tipo);
+  function renderizarHistorico(tipo) {
+    const lista = document.getElementById(`historico${capitalize(tipo)}`);
+    if (!lista) return;
+
+    if (historicoAtividades[tipo].length === 0) {
+      lista.innerHTML = '<li class="historico-vazio">Nenhuma ação recente.</li>';
+      return;
     }
 
-    function renderizarHistorico(tipo) {
-      const lista = document.getElementById(`historico${capitalize(tipo)}`);
-      if (!lista) return;
+    lista.innerHTML = historicoAtividades[tipo].map(item => `
+      <li class="historico-item">
+        <span>${item.mensagem}</span>
+        <span class="data">${item.hora}</span>
+      </li>
+    `).join('');
+  }
 
-      if (historicoAtividades[tipo].length === 0) {
-        lista.innerHTML = '<li class="historico-vazio">Nenhuma ação recente.</li>';
-        return;
-      }
+  function capitalize(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
 
-      lista.innerHTML = historicoAtividades[tipo].map(item => `
-        <li class="historico-item">
-          <span>${item.mensagem}</span>
-          <span class="data">${item.hora}</span>
-        </li>
-      `).join('');
-    }
-
-    function capitalize(s) {
-      return s.charAt(0).toUpperCase() + s.slice(1);
-    }
-
-    /* ===== OBRIGATORIEDADE RECEBIDOS ===== */
-    function toggleObrigatoriedadeRecebidos() {
-      const resp = document.getElementById('rc_resp').value;
-      const emProcesso = resp === 'Em processo';
-      const campos = ['rc_canal','rc_pedido','rc_nome','rc_tel','rc_transp','rc_motivo'];
-      campos.forEach(id => {
-        const el = document.getElementById(id);
-        if (emProcesso) {
-          el.removeAttribute('required');
-          el.closest('.form-group').querySelector('label').style.color = '';
-        } else {
-          el.setAttribute('required', '');
-        }
-      });
+  /* ===== OBRIGATORIEDADE RECEBIDOS ===== */
+  function toggleObrigatoriedadeRecebidos() {
+    const resp = document.getElementById('rc_resp').value;
+    const emProcesso = resp === 'Em processo';
+    const campos = ['rc_canal','rc_pedido','rc_nome','rc_tel','rc_transp','rc_motivo'];
+    campos.forEach(id => {
+      const el = document.getElementById(id);
       if (emProcesso) {
-        document.getElementById('rc_correto').value = '';
-        document.getElementById('btnSim').className = '';
-        document.getElementById('btnNao').className = '';
+        el.removeAttribute('required');
+        el.closest('.form-group').querySelector('label').style.color = '';
+      } else {
+        el.setAttribute('required', '');
       }
-    }
-
-    /* ===== VERIFICAÇÃO PEDIDO ===== */
-    async function verificarPedidoAoSair(numPedido) {
-      const num = String(numPedido).trim();
-      if (!num) return;
-      try {
-        const resp = await fetch(`${SCRIPT_URL}?action=checkPedido&num=${encodeURIComponent(num)}`);
-        const data = await resp.json();
-        const aviso = document.getElementById('msgEnvioDupInline');
-        const btn   = document.getElementById('btnRegistrarEnvio');
-        if (data.exists) {
-          aviso.style.display = 'block';
-          btn.disabled = true;
-        } else {
-          aviso.style.display = 'none';
-          btn.disabled = false;
-        }
-      } catch(e) { /* silencioso */ }
-    }
-
-    /* ===== BADGE PENDÊNCIAS ===== */
-    async function atualizarBadgePendencias() {
-      const badge = document.getElementById('navBadge');
-      try {
-        const resp = await fetch(`${SCRIPT_URL}?action=getPendencias`);
-        const data = await resp.json();
-        const count = (data.pendencias || []).length;
-        if (count > 0) {
-          badge.textContent = count;
-          badge.style.display = 'inline-flex';
-        } else {
-          badge.style.display = 'none';
-        }
-      } catch(e) {
-        badge.style.display = 'none';
-      }
-    }
-
-    /* ===== SUBMIT ENVIOS ===== */
-    async function submitEnvio() {
-      const payload = {
-        action:    'addEnvio',
-        canal:     document.getElementById('e_canal').value,
-        cliente:   document.getElementById('e_cliente').value.trim(),
-        telefone:  document.getElementById('e_tel').value.trim(),
-        pedido:    document.getElementById('e_pedido').value.trim(),
-        falha:     document.getElementById('e_falha').value,
-        setor:     document.getElementById('e_setor').value,
-        solucao:   document.getElementById('e_solucao').value,
-        obs:       document.getElementById('e_obs').value.trim()
-      };
-
-      const obrigatorios = ['canal','cliente','telefone','pedido','falha','setor','solucao'];
-      if (obrigatorios.some(k => !payload[k])) {
-        showAlert('msgEnvioErr', 'Preencha todos os campos obrigatórios.');
-        return;
-      }
-
-      try {
-        const resp   = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-        const result = await resp.json();
-
-        if (result.ok) {
-          showAlert('msgEnvioOk');
-          adicionarAoHistorico('envio', `Envio registrado: Pedido ${payload.pedido}`);
-          limparEnvio();
-          atualizarBadgePendencias();
-        } else {
-          showAlert('msgEnvioErr', 'Erro: ' + (result.error || 'desconhecido'));
-        }
-      } catch(e) {
-        showAlert('msgEnvioErr', 'Erro de conexão com o servidor.');
-      }
-    }
-
-    function limparEnvio() {
-      document.getElementById('formEnvio').reset();
-      document.getElementById('msgEnvioDupInline').style.display = 'none';
-      document.getElementById('btnRegistrarEnvio').disabled = false;
-    }
-
-    /* ===== SUBMIT REEMBOLSO ===== */
-    async function submitReembolso() {
-      const payload = {
-        action:    'addReembolso',
-        cliente:   document.getElementById('r_cliente').value.trim(),
-        loja:      document.getElementById('r_loja').value,
-        tipo:      document.getElementById('r_tipo').value,
-        valor:     document.getElementById('r_valor').value.trim(),
-        motivo:    document.getElementById('r_motivo').value,
-        nfVenda:   document.getElementById('r_nfVenda').value.trim(),
-        nfDevol:   document.getElementById('r_nfDevol').value.trim()
-      };
-
-      const obrigatorios = ['cliente','loja','tipo','valor','motivo'];
-      if (obrigatorios.some(k => !payload[k])) {
-        showAlert('msgReembErr', 'Preencha todos os campos obrigatórios.');
-        return;
-      }
-
-      try {
-        const resp   = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-        const result = await resp.json();
-
-        if (result.ok) {
-          showAlert('msgReembOk');
-          adicionarAoHistorico('reembolso', `Reembolso registrado: Cliente ${payload.cliente}`);
-          document.getElementById('formReembolso').reset();
-        } else {
-          showAlert('msgReembErr', 'Erro: ' + (result.error || 'desconhecido'));
-        }
-      } catch(e) {
-        showAlert('msgReembErr', 'Erro de conexão com o servidor.');
-      }
-    }
-
-    /* ===== SUBMIT RECEBIDOS ===== */
-    function selecionarCorreto(valor) {
-      document.getElementById('rc_correto').value = valor;
-      document.getElementById('btnSim').className = valor === 'Sim' ? 'selected-sim' : '';
-      document.getElementById('btnNao').className = valor === 'Não' ? 'selected-nao' : '';
-    }
-
-    async function submitRecebidos() {
-      const emProcesso = document.getElementById('rc_resp').value === 'Em processo';
-
-      const payload = {
-        action:            emProcesso ? 'addPendencia' : 'addRecebido',
-        responsavelFrete:  document.getElementById('rc_resp').value,
-        canalVenda:        document.getElementById('rc_canal').value,
-        numPedido:         document.getElementById('rc_pedido').value.trim(),
-        nomeCliente:       document.getElementById('rc_nome').value.trim(),
-        telefone:          document.getElementById('rc_tel').value.trim(),
-        transportadora:    document.getElementById('rc_transp').value,
-        motivoTroca:       document.getElementById('rc_motivo').value,
-        produtoCorreto:    document.getElementById('rc_correto').value,
-        produtosRecebidos: document.getElementById('rc_pecas').value.trim(),
-        observacao:        document.getElementById('rc_obs').value.trim()
-      };
-
-      if (!emProcesso) {
-        const obrigatorios = ['responsavelFrete','canalVenda','numPedido','nomeCliente','telefone',
-                              'transportadora','motivoTroca','produtoCorreto','produtosRecebidos'];
-        if (obrigatorios.some(k => !payload[k])) {
-          showAlert('msgRecebErr', 'Preencha todos os campos obrigatórios.');
-          return;
-        }
-      } else { // Se for "Em processo", verificar campos essenciais para a pendência
-        const essenciaisPendencia = ['numPedido', 'nomeCliente', 'telefone'];
-        if (essenciaisPendencia.some(k => !payload[k])) {
-          showAlert('msgRecebErr', 'Para criar uma pendência, o número do pedido, nome do cliente e telefone são obrigatórios.');
-          return;
-        }
-      }
-
-      try {
-        const resp   = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-        const result = await resp.json();
-
-        if (result.ok) {
-          if (emProcesso) {
-            showAlert('msgRecebPendencia');
-            adicionarAoHistorico('recebidos', `Pendência criada: Pedido ${payload.numPedido}`);
-            atualizarBadgePendencias();
-          } else {
-            showAlert('msgRecebOk');
-            adicionarAoHistorico('recebidos', `Recebido registrado: Pedido ${payload.numPedido}`);
-          }
-          limparRecebidos();
-        } else {
-          showAlert('msgRecebErr', 'Erro: ' + (result.error || 'desconhecido'));
-        }
-      } catch(e) {
-        showAlert('msgRecebErr', 'Erro de conexão com o servidor.');
-      }
-    }
-
-    function limparRecebidos() {
-      document.getElementById('formRecebidos').reset();
+    });
+    if (emProcesso) {
       document.getElementById('rc_correto').value = '';
       document.getElementById('btnSim').className = '';
       document.getElementById('btnNao').className = '';
-      toggleObrigatoriedadeRecebidos(); // Reseta a obrigatoriedade
     }
+  }
 
-    /* ===== PENDÊNCIAS ===== */
-    let listaPendenciasGlobal = [];
-    let pendenciaParaResolver = null; // Para a modal de confirmação
-
-    async function carregarPendencias() {
-      const container = document.getElementById('pendenciasContainer');
-      container.innerHTML = '<p style="color:var(--gray-mid);font-size:.85rem;padding:1rem;">Carregando...</p>';
-      try {
-        const resp = await fetch(`${SCRIPT_URL}?action=getPendencias`);
-        const data = await resp.json();
-        listaPendenciasGlobal = data.pendencias || [];
-        renderizarPendencias(listaPendenciasGlobal);
-      } catch(e) {
-        container.innerHTML = '<p style="color:var(--red);font-size:.85rem;padding:1rem;">Erro ao carregar pendências.</p>';
+  /* ===== VERIFICAÇÃO PEDIDO ===== */
+  async function verificarPedidoAoSair(numPedido) {
+    const num = String(numPedido).trim();
+    if (!num) return;
+    try {
+      const resp = await fetch(`${SCRIPT_URL}?action=checkPedido&num=${encodeURIComponent(num)}`);
+      const data = await resp.json();
+      const aviso = document.getElementById('msgEnvioDupInline');
+      const btn   = document.getElementById('btnRegistrarEnvio');
+      if (data.exists) {
+        aviso.style.display = 'block';
+        btn.disabled = true;
+      } else {
+        aviso.style.display = 'none';
+        btn.disabled = false;
       }
-    }
+    } catch(e) { /* silencioso */ }
+  }
 
-    function filtrarPendencias() {
-      const termo = document.getElementById('buscaPendencia').value.toLowerCase().trim();
-      if (!termo) {
-        renderizarPendencias(listaPendenciasGlobal);
-        return;
-      }
-      const filtrada = listaPendenciasGlobal.filter(p => {
-        return (
-          (p.NUM_PEDIDO    || '').toLowerCase().includes(termo) ||
-          (p.NOME_CLIENTE  || '').toLowerCase().includes(termo) ||
-          (p.TELEFONE      || '').toLowerCase().includes(termo) ||
-          (p.STATUS_PENDENCIA || '').toLowerCase().includes(termo)
-        );
-      });
-      renderizarPendencias(filtrada);
-    }
-
-    function renderizarPendencias(lista) {
-      const container = document.getElementById('pendenciasContainer');
-      const badge     = document.getElementById('navBadge');
-
-      if (!lista.length) {
+  /* ===== BADGE PENDÊNCIAS ===== */
+  async function atualizarBadgePendencias() {
+    const badge = document.getElementById('navBadge');
+    try {
+      const resp = await fetch(`${SCRIPT_URL}?action=getPendencias`);
+      const data = await resp.json();
+      const count = (data.pendencias || []).length;
+      if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline-flex';
+      } else {
         badge.style.display = 'none';
-        container.innerHTML = `
-          <div class="pendencias-vazio">
-            <span class="icone">✅</span>
-            <h3>Nenhuma pendência encontrada</h3>
-            <p>Todos os registros foram processados ou nenhum resultado para a busca.</p>
-          </div>`;
+      }
+    } catch(e) {
+      badge.style.display = 'none';
+    }
+  }
+
+  /* ===== SUBMIT ENVIOS ===== */
+  async function submitEnvio() {
+    const payload = {
+      action:    'addEnvio',
+      canal:     document.getElementById('e_canal').value,
+      cliente:   document.getElementById('e_cliente').value.trim(),
+      telefone:  document.getElementById('e_tel').value.trim(),
+      pedido:    document.getElementById('e_pedido').value.trim(),
+      falha:     document.getElementById('e_falha').value,
+      setor:     document.getElementById('e_setor').value,
+      solucao:   document.getElementById('e_solucao').value,
+      obs:       document.getElementById('e_obs').value.trim()
+    };
+
+    const obrigatorios = ['canal','cliente','telefone','pedido','falha','setor','solucao'];
+    if (obrigatorios.some(k => !payload[k])) {
+      showAlert('msgEnvioErr', 'Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    try {
+      const resp   = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+      const result = await resp.json();
+
+      if (result.ok) {
+        showAlert('msgEnvioOk');
+        adicionarAoHistorico('envio', `Envio registrado: Pedido ${payload.pedido}`);
+        limparEnvio();
+        atualizarBadgePendencias();
+      } else {
+        showAlert('msgEnvioErr', 'Erro: ' + (result.error || 'desconhecido'));
+      }
+    } catch(e) {
+      showAlert('msgEnvioErr', 'Erro de conexão com o servidor.');
+    }
+  }
+
+  function limparEnvio() {
+    document.getElementById('formEnvio').reset();
+    document.getElementById('msgEnvioDupInline').style.display = 'none';
+    document.getElementById('btnRegistrarEnvio').disabled = false;
+  }
+
+  /* ===== SUBMIT REEMBOLSO ===== */
+  async function submitReembolso() {
+    const payload = {
+      action:    'addReembolso',
+      cliente:   document.getElementById('r_cliente').value.trim(),
+      loja:      document.getElementById('r_loja').value,
+      tipo:      document.getElementById('r_tipo').value,
+      valor:     document.getElementById('r_valor').value.trim(),
+      motivo:    document.getElementById('r_motivo').value,
+      nfVenda:   document.getElementById('r_nfVenda').value.trim(),
+      nfDevol:   document.getElementById('r_nfDevol').value.trim()
+    };
+
+    const obrigatorios = ['cliente','loja','tipo','valor','motivo'];
+    if (obrigatorios.some(k => !payload[k])) {
+      showAlert('msgReembErr', 'Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    try {
+      const resp   = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+      const result = await resp.json();
+
+      if (result.ok) {
+        showAlert('msgReembOk');
+        adicionarAoHistorico('reembolso', `Reembolso registrado: Cliente ${payload.cliente}`);
+        document.getElementById('formReembolso').reset();
+      } else {
+        showAlert('msgReembErr', 'Erro: ' + (result.error || 'desconhecido'));
+      }
+    } catch(e) {
+      showAlert('msgReembErr', 'Erro de conexão com o servidor.');
+    }
+  }
+
+  /* ===== SUBMIT RECEBIDOS ===== */
+  function selecionarCorreto(valor) {
+    document.getElementById('rc_correto').value = valor;
+    document.getElementById('btnSim').className = valor === 'Sim' ? 'selected-sim' : '';
+    document.getElementById('btnNao').className = valor === 'Não' ? 'selected-nao' : '';
+  }
+
+  async function submitRecebidos() {
+    const emProcesso = document.getElementById('rc_resp').value === 'Em processo';
+
+    const payload = {
+      action:            emProcesso ? 'addPendencia' : 'addRecebido',
+      responsavelFrete:  document.getElementById('rc_resp').value,
+      canalVenda:        document.getElementById('rc_canal').value,
+      numPedido:         document.getElementById('rc_pedido').value.trim(),
+      nomeCliente:       document.getElementById('rc_nome').value.trim(),
+      telefone:          document.getElementById('rc_tel').value.trim(),
+      transportadora:    document.getElementById('rc_transp').value,
+      motivoTroca:       document.getElementById('rc_motivo').value,
+      produtoCorreto:    document.getElementById('rc_correto').value,
+      produtosRecebidos: document.getElementById('rc_pecas').value.trim(),
+      observacao:        document.getElementById('rc_obs').value.trim()
+    };
+
+    if (!emProcesso) {
+      const obrigatorios = ['responsavelFrete','canalVenda','numPedido','nomeCliente','telefone',
+                            'transportadora','motivoTroca','produtoCorreto','produtosRecebidos'];
+      if (obrigatorios.some(k => !payload[k])) {
+        showAlert('msgRecebErr', 'Preencha todos os campos obrigatórios.');
         return;
       }
+    } else { // Se for "Em processo", verificar campos essenciais para a pendência
+      const essenciaisPendencia = ['numPedido', 'nomeCliente', 'telefone'];
+      if (essenciaisPendencia.some(k => !payload[k])) {
+        showAlert('msgRecebErr', 'Para criar uma pendência, o número do pedido, nome do cliente e telefone são obrigatórios.');
+        return;
+      }
+    }
 
-      badge.textContent = listaPendenciasGlobal.length;
-      badge.style.display = 'inline-flex';
+    try {
+      const resp   = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+      const result = await resp.json();
 
-      container.innerHTML = lista.map((p, idx) => {
-        const statusClass = p.STATUS_PENDENCIA === 'Aguardando retorno do cliente' ? 'status-aguardando' : 'status-em-processo';
-        const diasEmAberto = calcularDiasEmAberto(formatarData(p.DATA));
+      if (result.ok) {
+        if (emProcesso) {
+          showAlert('msgRecebPendencia');
+          adicionarAoHistorico('recebidos', `Pendência criada: Pedido ${payload.numPedido}`);
+          atualizarBadgePendencias();
+        } else {
+          showAlert('msgRecebOk');
+          adicionarAoHistorico('recebidos', `Recebido registrado: Pedido ${payload.numPedido}`);
+        }
+        limparRecebidos();
+      } else {
+        showAlert('msgRecebErr', 'Erro: ' + (result.error || 'desconhecido'));
+      }
+    } catch(e) {
+      showAlert('msgRecebErr', 'Erro de conexão com o servidor.');
+    }
+  }
 
-        return `
+  function limparRecebidos() {
+    document.getElementById('formRecebidos').reset();
+    document.getElementById('rc_correto').value = '';
+    document.getElementById('btnSim').className = '';
+    document.getElementById('btnNao').className = '';
+    toggleObrigatoriedadeRecebidos(); // Reseta a obrigatoriedade
+  }
+
+  /* ===== PENDÊNCIAS ===== */
+  let listaPendenciasGlobal = [];
+  let pendenciaParaResolver = null; // Para a modal de confirmação
+
+  async function carregarPendencias() {
+    const container = document.getElementById('pendenciasContainer');
+    container.innerHTML = '<p style="color:var(--gray-mid);font-size:.85rem;padding:1rem;">Carregando...</p>';
+    try {
+      const resp = await fetch(`${SCRIPT_URL}?action=getPendencias`);
+      const data = await resp.json();
+      listaPendenciasGlobal = data.pendencias || [];
+      renderizarPendencias(listaPendenciasGlobal);
+    } catch(e) {
+      container.innerHTML = '<p style="color:var(--red);font-size:.85rem;padding:1rem;">Erro ao carregar pendências.</p>';
+    }
+  }
+
+  function filtrarPendencias() {
+    const termo = document.getElementById('buscaPendencia').value.toLowerCase().trim();
+    if (!termo) {
+      renderizarPendencias(listaPendenciasGlobal);
+      return;
+    }
+    const filtrada = listaPendenciasGlobal.filter(p => {
+      return (
+        (p.NUM_PEDIDO    || '').toLowerCase().includes(termo) ||
+        (p.NOME_CLIENTE  || '').toLowerCase().includes(termo) ||
+        (p.TELEFONE      || '').toLowerCase().includes(termo) ||
+        (p.CANAL_VENDA   || '').toLowerCase().includes(termo) ||
+        (p.TRANSPORTADORA || '').toLowerCase().includes(termo) ||
+        (p.MOTIVO_TROCA  || '').toLowerCase().includes(termo) ||
+        (p.OBSERVACAO    || '').toLowerCase().includes(termo) ||
+        (p.STATUS_PENDENCIA || '').toLowerCase().includes(termo)
+      );
+    });
+    renderizarPendencias(filtrada);
+  }
+
+  function renderizarPendencias(lista) {
+    const container = document.getElementById('pendenciasContainer');
+    if (!lista.length) {
+      container.innerHTML = `
+        <div class="pendencias-vazio">
+          <span class="icone">🤷‍♂️</span>
+          <h3>Nenhuma pendência encontrada.</h3>
+          <p>Tudo em ordem por aqui!</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = lista.map((p, idx) => {
+      const statusClass = p.STATUS_PENDENCIA === 'Aguardando retorno do cliente' ? 'status-aguardando' : 'status-em-processo';
+      return `
         <div class="pendencia-linha" id="pcard-${idx}">
           <div class="pendencia-resumo" onclick="toggleCard(${idx})">
             <div class="pendencia-resumo-info">
               <strong>Pedido ${p.NUM_PEDIDO || '—'}</strong>
               <span>${p.NOME_CLIENTE || '—'}</span>
-              <span>${formatarData(p.DATA)} (${diasEmAberto})</span>
-              <span>${p.TELEFONE || '—'}</span>
+              <span>${formatarData(p.DATA)}</span>
+              <span>${calcularDiasEmAberto(p.DATA)}</span>
             </div>
-            <div style="display:flex;align-items:center;gap:0.75rem;">
-              <span class="pendencia-badge ${statusClass}">${p.STATUS_PENDENCIA || 'Em processo - aguardando retorno do cliente'}</span>
-              <span class="pendencia-chevron">▼</span>
-            </div>
+            <span class="pendencia-badge ${statusClass}">${p.STATUS_PENDENCIA || 'Em processo'}</span>
+            <span class="pendencia-chevron">▼</span>
           </div>
 
           <div class="pendencia-corpo">
-            <div class="pendencia-infos" id="infos-view-${idx}">
-              <div class="pendencia-info-item"><span>Canal</span><span>${p.CANAL_VENDA || '—'}</span></div>
+            <div class="pendencia-infos">
+              <div class="pendencia-info-item"><span>Canal de Venda</span><span>${p.CANAL_VENDA || '—'}</span></div>
+              <div class="pendencia-info-item"><span>Telefone</span><span>${p.TELEFONE || '—'}</span></div>
               <div class="pendencia-info-item"><span>Transportadora</span><span>${p.TRANSPORTADORA || '—'}</span></div>
               <div class="pendencia-info-item"><span>Motivo da Troca</span><span>${p.MOTIVO_TROCA || '—'}</span></div>
               <div class="pendencia-info-item"><span>Produto Correto?</span><span>${p.PRODUTO_CORRETO || '—'}</span></div>
@@ -470,7 +966,6 @@ $
                 <div class="form-group">
                   <label>Status da Pendência</label>
                   <select id="ed_status_${idx}">
-                    <option value="Em processo - aguardando retorno do cliente"${p.STATUS_PENDENCIA === 'Em processo - aguardando retorno do cliente' ? ' selected' : ''}>Em processo - aguardando retorno do cliente</option>
                     <option value="Aguardando retorno do cliente"${p.STATUS_PENDENCIA === 'Aguardando retorno do cliente' ? ' selected' : ''}>Aguardando retorno do cliente</option>
                   </select>
                 </div>
@@ -513,428 +1008,428 @@ $
           </div>
         </div>
       `;
-      }).join('');
+    }).join('');
+  }
+
+  function toggleCard(idx) {
+    document.getElementById(`pcard-${idx}`).classList.toggle('aberta');
+  }
+
+  function toggleEditar(idx) {
+    const ed = document.getElementById(`editar-${idx}`);
+    const rs = document.getElementById(`resolver-${idx}`);
+    rs.classList.remove('aberto');
+    ed.classList.toggle('aberto');
+  }
+
+  function cancelarEdicao(idx) {
+    document.getElementById(`editar-${idx}`).classList.remove('aberto');
+  }
+
+  async function salvarEdicaoLocal(idx, linha) {
+    const p = listaPendenciasGlobal.find((_, i) => i === idx);
+    if (!p) return;
+
+    const payload = {
+      action:            'updatePendencia',
+      linha:             linha,
+      numPedido:         document.getElementById(`ed_pedido_${idx}`).value.trim(),
+      nomeCliente:       document.getElementById(`ed_nome_${idx}`).value.trim(),
+      telefone:          document.getElementById(`ed_tel_${idx}`).value.trim(),
+      canalVenda:        document.getElementById(`ed_canal_${idx}`).value,
+      transportadora:    document.getElementById(`ed_transp_${idx}`).value,
+      motivoTroca:       document.getElementById(`ed_motivo_${idx}`).value,
+      produtoCorreto:    document.getElementById(`ed_correto_${idx}`).value,
+      produtosRecebidos: document.getElementById(`ed_pecas_${idx}`).value.trim(),
+      observacao:        document.getElementById(`ed_obs_${idx}`).value.trim(),
+      statusPendencia:   document.getElementById(`ed_status_${idx}`).value
+    };
+
+    try {
+      const resp = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      const result = await resp.json();
+
+      if (result.ok) {
+        // Atualiza o objeto localmente para refletir a mudança
+        p.NUM_PEDIDO         = payload.numPedido;
+        p.NOME_CLIENTE       = payload.nomeCliente;
+        p.TELEFONE           = payload.telefone;
+        p.CANAL_VENDA        = payload.canalVenda;
+        p.TRANSPORTADORA     = payload.transportadora;
+        p.MOTIVO_TROCA       = payload.motivoTroca;
+        p.PRODUTO_CORRETO    = payload.produtoCorreto;
+        p.PRODUTOS_RECEBIDOS = payload.produtosRecebidos;
+        p.OBSERVACAO         = payload.observacao;
+        p.STATUS_PENDENCIA   = payload.statusPendencia;
+
+        document.getElementById(`editar-${idx}`).classList.remove('aberto');
+        renderizarPendencias(listaPendenciasGlobal); // Renderiza novamente para atualizar a UI
+        setTimeout(() => {
+          document.getElementById(`pcard-${idx}`).classList.add('aberta'); // Mantém o card aberto
+        }, 50);
+        adicionarAoHistorico('pendencias', `Pendência ${p.NUM_PEDIDO} editada.`);
+      } else {
+        showAlert(`erroResolver-${idx}`, 'Erro ao salvar edição: ' + (result.error || 'desconhecido'));
+      }
+    } catch (e) {
+      showAlert(`erroResolver-${idx}`, 'Erro de conexão ao salvar edição.');
+    }
+  }
+
+  function toggleResolver(idx) {
+    const rs = document.getElementById(`resolver-${idx}`);
+    const ed = document.getElementById(`editar-${idx}`);
+    ed.classList.remove('aberto');
+    rs.classList.toggle('aberto');
+  }
+
+  /* ===== MODAL DE CONFIRMAÇÃO ===== */
+  function showConfirmModal(idx) {
+    const p = listaPendenciasGlobal.find((_, i) => i === idx);
+    if (!p) return;
+
+    const responsavel = document.getElementById(`resp-${idx}`).value;
+    const obsResolver = document.getElementById(`obs-${idx}`).value.trim();
+    const errEl       = document.getElementById(`erroResolver-${idx}`);
+
+    if (!responsavel) {
+      errEl.textContent = 'Selecione o responsável pelo frete antes de confirmar.';
+      errEl.style.display = 'block';
+      setTimeout(() => { errEl.style.display = 'none'; }, 4000);
+      return;
     }
 
-    function toggleCard(idx) {
-      document.getElementById(`pcard-${idx}`).classList.toggle('aberta');
+    const obrigatorios = {
+      'Número do Pedido':      p.NUM_PEDIDO,
+      'Nome do Cliente':       p.NOME_CLIENTE,
+      'Telefone':              p.TELEFONE,
+      'Canal de Venda':        p.CANAL_VENDA,
+      'Transportadora':        p.TRANSPORTADORA,
+      'Motivo da Troca':       p.MOTIVO_TROCA,
+      'Produto Correto?':      p.PRODUTO_CORRETO,
+      'Peças Recebidas':       p.PRODUTOS_RECEBIDOS
+    };
+
+    const faltando = Object.entries(obrigatorios)
+      .filter(([, v]) => !v || !String(v).trim())
+      .map(([k]) => k);
+
+    if (faltando.length) {
+      errEl.textContent = `Preencha os campos obrigatórios antes de resolver: ${faltando.join(', ')}.`;
+      errEl.style.display = 'block';
+      setTimeout(() => { errEl.style.display = 'none'; }, 6000);
+      return;
     }
 
-    function toggleEditar(idx) {
-      const ed = document.getElementById(`editar-${idx}`);
-      const rs = document.getElementById(`resolver-${idx}`);
-      rs.classList.remove('aberto');
-      ed.classList.toggle('aberto');
+    pendenciaParaResolver = {
+      idx: idx,
+      linha: p._linha,
+      responsavel: responsavel,
+      obsResolver: obsResolver,
+      pendencia: p
+    };
+
+    document.getElementById('modalPedido').textContent = p.NUM_PEDIDO || '—';
+    document.getElementById('confirmModal').style.display = 'flex';
+  }
+
+  function hideConfirmModal() {
+    document.getElementById('confirmModal').style.display = 'none';
+    pendenciaParaResolver = null;
+  }
+
+  document.getElementById('btnConfirmarResolucao').addEventListener('click', () => {
+    if (pendenciaParaResolver) {
+      confirmarResolucao(
+        pendenciaParaResolver.idx,
+        pendenciaParaResolver.linha,
+        pendenciaParaResolver.responsavel,
+        pendenciaParaResolver.obsResolver
+      );
+      hideConfirmModal();
     }
+  });
 
-    function cancelarEdicao(idx) {
-      document.getElementById(`editar-${idx}`).classList.remove('aberto');
+  async function confirmarResolucao(idx, linha, responsavel, obsResolver) {
+    const p = listaPendenciasGlobal.find((_, i) => i === idx);
+    if (!p) return;
+
+    const payload = {
+      action:            'resolverPendencia',
+      data:              p.DATA || dataHoje(),
+      linha:             linha,
+      responsavel:       responsavel,
+      canalVenda:        p.CANAL_VENDA,
+      numPedido:         p.NUM_PEDIDO,
+      nomeCliente:       p.NOME_CLIENTE,
+      telefone:          p.TELEFONE,
+      transportadora:    p.TRANSPORTADORA,
+      motivoTroca:       p.MOTIVO_TROCA,
+      produtoCorreto:    p.PRODUTO_CORRETO,
+      produtosRecebidos: p.PRODUTOS_RECEBIDOS,
+      observacao:        obsResolver || p.OBSERVACAO || '',
+      statusPendencia:   'Concluído' // Status final ao resolver
+    };
+
+    try {
+      const resp   = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      const result = await resp.json();
+
+      if (result.ok) {
+        const card = document.getElementById(`pcard-${idx}`);
+        card.style.transition = 'opacity 0.4s';
+        card.style.opacity = '0';
+        setTimeout(() => {
+          listaPendenciasGlobal = listaPendenciasGlobal.filter((_, i) => i !== idx);
+          renderizarPendencias(listaPendenciasGlobal);
+          atualizarBadgePendencias();
+        }, 400);
+        adicionarAoHistorico('pendencias', `Pendência ${p.NUM_PEDIDO} resolvida.`);
+      } else {
+        showAlert(`erroResolver-${idx}`, 'Erro: ' + (result.error || 'desconhecido'));
+      }
+    } catch(e) {
+      showAlert(`erroResolver-${idx}`, 'Erro de conexão.');
     }
+  }
 
-    async function salvarEdicaoLocal(idx, linha) {
-      const p = listaPendenciasGlobal.find((_, i) => i === idx);
-      if (!p) return;
+  /* ===== FILTROS E HISTÓRICO DE ENVIOS E RECEBIDOS (NOVA SEÇÃO) ===== */
 
-      const payload = {
-        action:            'updatePendencia',
-        linha:             linha,
-        numPedido:         document.getElementById(`ed_pedido_${idx}`).value.trim(),
-        nomeCliente:       document.getElementById(`ed_nome_${idx}`).value.trim(),
-        telefone:          document.getElementById(`ed_tel_${idx}`).value.trim(),
-        canalVenda:        document.getElementById(`ed_canal_${idx}`).value,
-        transportadora:    document.getElementById(`ed_transp_${idx}`).value,
-        motivoTroca:       document.getElementById(`ed_motivo_${idx}`).value,
-        produtoCorreto:    document.getElementById(`ed_correto_${idx}`).value,
-        produtosRecebidos: document.getElementById(`ed_pecas_${idx}`).value.trim(),
-        observacao:        document.getElementById(`ed_obs_${idx}`).value.trim(),
-        statusPendencia:   document.getElementById(`ed_status_${idx}`).value
-      };
+  // Adiciona a nova seção de histórico e filtros para Envio
+  document.addEventListener('DOMContentLoaded', () => {
+    const formEnvio = document.getElementById('formEnvio');
+    const historicoEnvioHtml = `
+      <div class="card" style="margin-top: 2rem;">
+        <div class="card-title">Histórico de Envios</div>
+        <div class="filtros-wrap">
+          <div class="form-group full busca-texto">
+            <label for="filtroEnvioBusca">Buscar (Pedido, Cliente, Telefone)</label>
+            <input type="text" id="filtroEnvioBusca" placeholder="Ex: 12345, João Silva" oninput="aplicarFiltrosEnvio()">
+          </div>
+          <div class="form-group">
+            <label for="filtroEnvioDataInicio">Data Início</label>
+            <input type="date" id="filtroEnvioDataInicio" onchange="aplicarFiltrosEnvio()">
+          </div>
+          <div class="form-group">
+            <label for="filtroEnvioDataFim">Data Fim</label>
+            <input type="date" id="filtroEnvioDataFim" onchange="aplicarFiltrosEnvio()">
+          </div>
+          <div class="form-group">
+            <label for="filtroEnvioCanal">Canal de Venda</label>
+            <select id="filtroEnvioCanal" onchange="aplicarFiltrosEnvio()">
+              <option value="">Todos</option>
+              <option>Brunx Varejo</option>
+              <option>Brunx Atacado</option>
+              <option>Liso&Co</option>
+            </select>
+          </div>
+        </div>
+        <div id="historicoEnviosCompleto">
+          <p class="historico-vazio">Carregando histórico...</p>
+        </div>
+      </div>
+    `;
+    formEnvio.insertAdjacentHTML('afterend', historicoEnvioHtml);
 
-      try {
-        const resp = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
-        const result = await resp.json();
+    // Adiciona a nova seção de histórico e filtros para Recebidos
+    const formRecebidos = document.getElementById('formRecebidos');
+    const historicoRecebidosHtml = `
+      <div class="card" style="margin-top: 2rem;">
+        <div class="card-title">Histórico de Recebidos</div>
+        <div class="filtros-wrap">
+          <div class="form-group full busca-texto">
+            <label for="filtroRecebidosBusca">Buscar (Pedido, Cliente, Telefone)</label>
+            <input type="text" id="filtroRecebidosBusca" placeholder="Ex: 12345, Maria Souza" oninput="aplicarFiltrosRecebidos()">
+          </div>
+          <div class="form-group">
+            <label for="filtroRecebidosDataInicio">Data Início</label>
+            <input type="date" id="filtroRecebidosDataInicio" onchange="aplicarFiltrosRecebidos()">
+          </div>
+          <div class="form-group">
+            <label for="filtroRecebidosDataFim">Data Fim</label>
+            <input type="date" id="filtroRecebidosDataFim" onchange="aplicarFiltrosRecebidos()">
+          </div>
+          <div class="form-group">
+            <label for="filtroRecebidosCanal">Canal de Venda</label>
+            <select id="filtroRecebidosCanal" onchange="aplicarFiltrosRecebidos()">
+              <option value="">Todos</option>
+              <option>Brunx Varejo</option>
+              <option>Brunx Atacado</option>
+              <option>Liso&Co</option>
+              <option>Mercado Livre Brunx</option>
+              <option>Mercado Livre VST</option>
+              <option>Mercado Livre Over</option>
+            </select>
+          </div>
+        </div>
+        <div id="historicoRecebidosCompleto">
+          <p class="historico-vazio">Carregando histórico...</p>
+        </div>
+      </div>
+    `;
+    formRecebidos.insertAdjacentHTML('afterend', historicoRecebidosHtml);
+  });
 
-        if (result.ok) {
-          // Atualiza o objeto localmente para refletir a mudança
-          p.NUM_PEDIDO         = payload.numPedido;
-          p.NOME_CLIENTE       = payload.nomeCliente;
-          p.TELEFONE           = payload.telefone;
-          p.CANAL_VENDA        = payload.canalVenda;
-          p.TRANSPORTADORA     = payload.transportadora;
-          p.MOTIVO_TROCA       = payload.motivoTroca;
-          p.PRODUTO_CORRETO    = payload.produtoCorreto;
-          p.PRODUTOS_RECEBIDOS = payload.produtosRecebidos;
-          p.OBSERVACAO         = payload.observacao;
-          p.STATUS_PENDENCIA   = payload.statusPendencia;
+  let listaEnviosCompleta = [];
+  let listaRecebidosCompleta = [];
 
-          document.getElementById(`editar-${idx}`).classList.remove('aberto');
-          renderizarPendencias(listaPendenciasGlobal); // Renderiza novamente para atualizar a UI
-          setTimeout(() => {
-            document.getElementById(`pcard-${idx}`).classList.add('aberta'); // Mantém o card aberto
-          }, 50);
-          adicionarAoHistorico('pendencias', `Pendência ${p.NUM_PEDIDO} editada.`);
-        } else {
-          showAlert(`erroResolver-${idx}`, 'Erro ao salvar edição: ' + (result.error || 'desconhecido'));
+  async function carregarDadosParaFiltros(tipo) {
+    const containerId = tipo === 'envio' ? 'historicoEnviosCompleto' : 'historicoRecebidosCompleto';
+    const action = tipo === 'envio' ? 'getEnvios' : 'getRecebidos';
+    const listaGlobal = tipo === 'envio' ? 'listaEnviosCompleta' : 'listaRecebidosCompleta';
+    const container = document.getElementById(containerId);
+
+    container.innerHTML = '<p class="historico-vazio">Carregando dados completos...</p>';
+    try {
+      const resp = await fetch(`${SCRIPT_URL}?action=${action}`);
+      const data = await resp.json();
+      window[listaGlobal] = data[tipo] || [];
+      if (tipo === 'envio') {
+        renderizarHistoricoCompletoEnvio(window[listaGlobal]);
+      } else {
+        renderizarHistoricoCompletoRecebidos(window[listaGlobal]);
+      }
+    } catch(e) {
+      container.innerHTML = `<p class="historico-vazio" style="color:var(--red);">Erro ao carregar histórico completo de ${tipo}.</p>`;
+    }
+  }
+
+  function aplicarFiltrosEnvio() {
+    const termoBusca = document.getElementById('filtroEnvioBusca').value.toLowerCase().trim();
+    const dataInicio = document.getElementById('filtroEnvioDataInicio').value;
+    const dataFim    = document.getElementById('filtroEnvioDataFim').value;
+    const canal      = document.getElementById('filtroEnvioCanal').value;
+
+    let filtrada = listaEnviosCompleta.filter(e => {
+      const dataRegistro = new Date(e.DATA);
+      const dataInicioObj = dataInicio ? new Date(dataInicio) : null;
+      const dataFimObj    = dataFim    ? new Date(dataFim)    : null;
+
+      // Ajuste para considerar o dia inteiro na data final
+      if (dataFimObj) dataFimObj.setDate(dataFimObj.getDate() + 1);
+
+      const matchBusca = termoBusca === '' ||
+        (e.NUM_PEDIDO    || '').toLowerCase().includes(termoBusca) ||
+        (e.CLIENTE       || '').toLowerCase().includes(termoBusca) ||
+        (e.TELEFONE      || '').toLowerCase().includes(termoBusca);
+
+      const matchData = (!dataInicioObj || dataRegistro >= dataInicioObj) &&
+                        (!dataFimObj    || dataRegistro < dataFimObj);
+
+      const matchCanal = canal === '' || e.CANAL_VENDA === canal;
+
+      return matchBusca && matchData && matchCanal;
+    });
+
+    renderizarHistoricoCompletoEnvio(filtrada);
+  }
+
+  function renderizarHistoricoCompletoEnvio(lista) {
+    const container = document.getElementById('historicoEnviosCompleto');
+    if (!lista.length) {
+      container.innerHTML = '<p class="historico-vazio">Nenhum envio encontrado com os filtros aplicados.</p>';
+      return;
+    }
+    container.innerHTML = lista.map(e => `
+      <div class="pendencia-linha" style="border-left-color:#166534;">
+        <div class="pendencia-resumo" style="cursor:default;">
+          <div class="pendencia-resumo-info">
+            <strong>Pedido ${e.NUM_PEDIDO || '—'}</strong>
+            <span>${e.CLIENTE || '—'}</span>
+            <span>${formatarData(e.DATA)}</span>
+            <span>${e.CANAL_VENDA || '—'}</span>
+          </div>
+          <span class="pendencia-badge" style="background:#D1FAE5;border-color:#6EE7B7;color:#065F46;">Envio</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function aplicarFiltrosRecebidos() {
+    const termoBusca = document.getElementById('filtroRecebidosBusca').value.toLowerCase().trim();
+    const dataInicio = document.getElementById('filtroRecebidosDataInicio').value;
+    const dataFim    = document.getElementById('filtroRecebidosDataFim').value;
+    const canal      = document.getElementById('filtroRecebidosCanal').value;
+
+    let filtrada = listaRecebidosCompleta.filter(r => {
+      const dataRegistro = new Date(r.DATA);
+      const dataInicioObj = dataInicio ? new Date(dataInicio) : null;
+      const dataFimObj    = dataFim    ? new Date(dataFim)    : null;
+
+      // Ajuste para considerar o dia inteiro na data final
+      if (dataFimObj) dataFimObj.setDate(dataFimObj.getDate() + 1);
+
+      const matchBusca = termoBusca === '' ||
+        (r.NUM_PEDIDO    || '').toLowerCase().includes(termoBusca) ||
+        (r.NOME_CLIENTE  || '').toLowerCase().includes(termoBusca) ||
+        (r.TELEFONE      || '').toLowerCase().includes(termoBusca);
+
+      const matchData = (!dataInicioObj || dataRegistro >= dataInicioObj) &&
+                        (!dataFimObj    || dataRegistro < dataFimObj);
+
+      const matchCanal = canal === '' || r.CANAL_VENDA === canal;
+
+      return matchBusca && matchData && matchCanal;
+    });
+
+    renderizarHistoricoCompletoRecebidos(filtrada);
+  }
+
+  function renderizarHistoricoCompletoRecebidos(lista) {
+    const container = document.getElementById('historicoRecebidosCompleto');
+    if (!lista.length) {
+      container.innerHTML = '<p class="historico-vazio">Nenhum recebido encontrado com os filtros aplicados.</p>';
+      return;
+    }
+    container.innerHTML = lista.map(r => `
+      <div class="pendencia-linha" style="border-left-color:#059669;">
+        <div class="pendencia-resumo" style="cursor:default;">
+          <div class="pendencia-resumo-info">
+            <strong>Pedido ${r.NUM_PEDIDO || '—'}</strong>
+            <span>${r.NOME_CLIENTE || '—'}</span>
+            <span>${formatarData(r.DATA)}</span>
+            <span>${r.CANAL_VENDA || '—'}</span>
+          </div>
+          <span class="pendencia-badge" style="background:#D1FAE5;border-color:#6EE7B7;color:#065F46;">Recebido</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /* ===== INIT (AJUSTE) ===== */
+  window.addEventListener('DOMContentLoaded', () => {
+    atualizarBadgePendencias();
+    renderizarHistorico('envio');
+    renderizarHistorico('reembolso');
+    renderizarHistorico('recebidos');
+
+    // Carregar dados completos para os filtros quando as seções forem ativadas
+    document.getElementById('mainNav').addEventListener('click', (event) => {
+      const target = event.target;
+      if (target.tagName === 'BUTTON') {
+        const sectionId = target.getAttribute('onclick').match(/'([^']+)'/)[1];
+        if (sectionId === 'envio') {
+          carregarDadosParaFiltros('envio');
+        } else if (sectionId === 'recebidos') {
+          carregarDadosParaFiltros('recebidos');
         }
-      } catch (e) {
-        showAlert(`erroResolver-${idx}`, 'Erro de conexão ao salvar edição.');
-      }
-    }
-
-    function toggleResolver(idx) {
-      const rs = document.getElementById(`resolver-${idx}`);
-      const ed = document.getElementById(`editar-${idx}`);
-      ed.classList.remove('aberto');
-      rs.classList.toggle('aberto');
-    }
-
-    /* ===== MODAL DE CONFIRMAÇÃO ===== */
-    function showConfirmModal(idx) {
-      const p = listaPendenciasGlobal.find((_, i) => i === idx);
-      if (!p) return;
-
-      const responsavel = document.getElementById(`resp-${idx}`).value;
-      const obsResolver = document.getElementById(`obs-${idx}`).value.trim();
-      const errEl       = document.getElementById(`erroResolver-${idx}`);
-
-      if (!responsavel) {
-        errEl.textContent = 'Selecione o responsável pelo frete antes de confirmar.';
-        errEl.style.display = 'block';
-        setTimeout(() => { errEl.style.display = 'none'; }, 4000);
-        return;
-      }
-
-      const obrigatorios = {
-        'Número do Pedido':      p.NUM_PEDIDO,
-        'Nome do Cliente':       p.NOME_CLIENTE,
-        'Telefone':              p.TELEFONE,
-        'Canal de Venda':        p.CANAL_VENDA,
-        'Transportadora':        p.TRANSPORTADORA,
-        'Motivo da Troca':       p.MOTIVO_TROCA,
-        'Produto Correto?':      p.PRODUTO_CORRETO,
-        'Peças Recebidas':       p.PRODUTOS_RECEBIDOS
-      };
-
-      const faltando = Object.entries(obrigatorios)
-        .filter(([, v]) => !v || !String(v).trim())
-        .map(([k]) => k);
-
-      if (faltando.length) {
-        errEl.textContent = `Preencha os campos obrigatórios antes de resolver: ${faltando.join(', ')}.`;
-        errEl.style.display = 'block';
-        setTimeout(() => { errEl.style.display = 'none'; }, 6000);
-        return;
-      }
-
-      pendenciaParaResolver = {
-        idx: idx,
-        linha: p._linha,
-        responsavel: responsavel,
-        obsResolver: obsResolver,
-        pendencia: p
-      };
-
-      document.getElementById('modalPedido').textContent = p.NUM_PEDIDO || '—';
-      document.getElementById('confirmModal').style.display = 'flex';
-    }
-
-    function hideConfirmModal() {
-      document.getElementById('confirmModal').style.display = 'none';
-      pendenciaParaResolver = null;
-    }
-
-    document.getElementById('btnConfirmarResolucao').addEventListener('click', () => {
-      if (pendenciaParaResolver) {
-        confirmarResolucao(
-          pendenciaParaResolver.idx,
-          pendenciaParaResolver.linha,
-          pendenciaParaResolver.responsavel,
-          pendenciaParaResolver.obsResolver
-        );
-        hideConfirmModal();
       }
     });
 
-    async function confirmarResolucao(idx, linha, responsavel, obsResolver) {
-      const p = listaPendenciasGlobal.find((_, i) => i === idx);
-      if (!p) return;
-
-      const payload = {
-        action:            'resolverPendencia',
-        data:              p.DATA || dataHoje(),
-        linha:             linha,
-        responsavel:       responsavel,
-        canalVenda:        p.CANAL_VENDA,
-        numPedido:         p.NUM_PEDIDO,
-        nomeCliente:       p.NOME_CLIENTE,
-        telefone:          p.TELEFONE,
-        transportadora:    p.TRANSPORTADORA,
-        motivoTroca:       p.MOTIVO_TROCA,
-        produtoCorreto:    p.PRODUTO_CORRETO,
-        produtosRecebidos: p.PRODUTOS_RECEBIDOS,
-        observacao:        obsResolver || p.OBSERVACAO || '',
-        statusPendencia:   'Concluído' // Status final ao resolver
-      };
-
-      try {
-        const resp   = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
-        const result = await resp.json();
-
-        if (result.ok) {
-          const card = document.getElementById(`pcard-${idx}`);
-          card.style.transition = 'opacity 0.4s';
-          card.style.opacity = '0';
-          setTimeout(() => {
-            listaPendenciasGlobal = listaPendenciasGlobal.filter((_, i) => i !== idx);
-            renderizarPendencias(listaPendenciasGlobal);
-            atualizarBadgePendencias();
-          }, 400);
-          adicionarAoHistorico('pendencias', `Pendência ${p.NUM_PEDIDO} resolvida.`);
-        } else {
-          showAlert(`erroResolver-${idx}`, 'Erro: ' + (result.error || 'desconhecido'));
-        }
-      } catch(e) {
-        showAlert(`erroResolver-${idx}`, 'Erro de conexão.');
-      }
+    // Carregar dados para a seção ativa inicialmente (se for Envio ou Recebidos)
+    const activeSectionId = document.querySelector('.section.active').id;
+    if (activeSectionId === 'envio') {
+      carregarDadosParaFiltros('envio');
+    } else if (activeSectionId === 'recebidos') {
+      carregarDadosParaFiltros('recebidos');
     }
-
-    /* ===== FILTROS E HISTÓRICO DE ENVIOS E RECEBIDOS (NOVA SEÇÃO) ===== */
-
-    // Adiciona a nova seção de histórico e filtros para Envio
-    document.addEventListener('DOMContentLoaded', () => {
-      const formEnvio = document.getElementById('formEnvio');
-      const historicoEnvioHtml = `
-        <div class="card" style="margin-top: 2rem;">
-          <div class="card-title">Histórico de Envios</div>
-          <div class="filtros-wrap">
-            <div class="form-group full busca-texto">
-              <label for="filtroEnvioBusca">Buscar (Pedido, Cliente, Telefone)</label>
-              <input type="text" id="filtroEnvioBusca" placeholder="Ex: 12345, João Silva" oninput="aplicarFiltrosEnvio()">
-            </div>
-            <div class="form-group">
-              <label for="filtroEnvioDataInicio">Data Início</label>
-              <input type="date" id="filtroEnvioDataInicio" onchange="aplicarFiltrosEnvio()">
-            </div>
-            <div class="form-group">
-              <label for="filtroEnvioDataFim">Data Fim</label>
-              <input type="date" id="filtroEnvioDataFim" onchange="aplicarFiltrosEnvio()">
-            </div>
-            <div class="form-group">
-              <label for="filtroEnvioCanal">Canal de Venda</label>
-              <select id="filtroEnvioCanal" onchange="aplicarFiltrosEnvio()">
-                <option value="">Todos</option>
-                <option>Brunx Varejo</option>
-                <option>Brunx Atacado</option>
-                <option>Liso&Co</option>
-              </select>
-            </div>
-          </div>
-          <div id="historicoEnviosCompleto">
-            <p class="historico-vazio">Carregando histórico...</p>
-          </div>
-        </div>
-      `;
-      formEnvio.insertAdjacentHTML('afterend', historicoEnvioHtml);
-
-      // Adiciona a nova seção de histórico e filtros para Recebidos
-      const formRecebidos = document.getElementById('formRecebidos');
-      const historicoRecebidosHtml = `
-        <div class="card" style="margin-top: 2rem;">
-          <div class="card-title">Histórico de Recebidos</div>
-          <div class="filtros-wrap">
-            <div class="form-group full busca-texto">
-              <label for="filtroRecebidosBusca">Buscar (Pedido, Cliente, Telefone)</label>
-              <input type="text" id="filtroRecebidosBusca" placeholder="Ex: 12345, Maria Souza" oninput="aplicarFiltrosRecebidos()">
-            </div>
-            <div class="form-group">
-              <label for="filtroRecebidosDataInicio">Data Início</label>
-              <input type="date" id="filtroRecebidosDataInicio" onchange="aplicarFiltrosRecebidos()">
-            </div>
-            <div class="form-group">
-              <label for="filtroRecebidosDataFim">Data Fim</label>
-              <input type="date" id="filtroRecebidosDataFim" onchange="aplicarFiltrosRecebidos()">
-            </div>
-            <div class="form-group">
-              <label for="filtroRecebidosCanal">Canal de Venda</label>
-              <select id="filtroRecebidosCanal" onchange="aplicarFiltrosRecebidos()">
-                <option value="">Todos</option>
-                <option>Brunx Varejo</option>
-                <option>Brunx Atacado</option>
-                <option>Liso&Co</option>
-                <option>Mercado Livre Brunx</option>
-                <option>Mercado Livre VST</option>
-                <option>Mercado Livre Over</option>
-              </select>
-            </div>
-          </div>
-          <div id="historicoRecebidosCompleto">
-            <p class="historico-vazio">Carregando histórico...</p>
-          </div>
-        </div>
-      `;
-      formRecebidos.insertAdjacentHTML('afterend', historicoRecebidosHtml);
-    });
-
-    let listaEnviosCompleta = [];
-    let listaRecebidosCompleta = [];
-
-    async function carregarDadosParaFiltros(tipo) {
-      const containerId = tipo === 'envio' ? 'historicoEnviosCompleto' : 'historicoRecebidosCompleto';
-      const action = tipo === 'envio' ? 'getEnvios' : 'getRecebidos';
-      const listaGlobal = tipo === 'envio' ? 'listaEnviosCompleta' : 'listaRecebidosCompleta';
-      const container = document.getElementById(containerId);
-
-      container.innerHTML = '<p class="historico-vazio">Carregando dados completos...</p>';
-      try {
-        const resp = await fetch(`${SCRIPT_URL}?action=${action}`);
-        const data = await resp.json();
-        window[listaGlobal] = data[tipo] || [];
-        if (tipo === 'envio') {
-          renderizarHistoricoCompletoEnvio(window[listaGlobal]);
-        } else {
-          renderizarHistoricoCompletoRecebidos(window[listaGlobal]);
-        }
-      } catch(e) {
-        container.innerHTML = `<p class="historico-vazio" style="color:var(--red);">Erro ao carregar histórico completo de ${tipo}.</p>`;
-      }
-    }
-
-    function aplicarFiltrosEnvio() {
-      const termoBusca = document.getElementById('filtroEnvioBusca').value.toLowerCase().trim();
-      const dataInicio = document.getElementById('filtroEnvioDataInicio').value;
-      const dataFim    = document.getElementById('filtroEnvioDataFim').value;
-      const canal      = document.getElementById('filtroEnvioCanal').value;
-
-      let filtrada = listaEnviosCompleta.filter(e => {
-        const dataRegistro = new Date(e.DATA);
-        const dataInicioObj = dataInicio ? new Date(dataInicio) : null;
-        const dataFimObj    = dataFim    ? new Date(dataFim)    : null;
-
-        // Ajuste para considerar o dia inteiro na data final
-        if (dataFimObj) dataFimObj.setDate(dataFimObj.getDate() + 1);
-
-        const matchBusca = termoBusca === '' ||
-          (e.NUM_PEDIDO    || '').toLowerCase().includes(termoBusca) ||
-          (e.CLIENTE       || '').toLowerCase().includes(termoBusca) ||
-          (e.TELEFONE      || '').toLowerCase().includes(termoBusca);
-
-        const matchData = (!dataInicioObj || dataRegistro >= dataInicioObj) &&
-                          (!dataFimObj    || dataRegistro < dataFimObj);
-
-        const matchCanal = canal === '' || e.CANAL_VENDA === canal;
-
-        return matchBusca && matchData && matchCanal;
-      });
-
-      renderizarHistoricoCompletoEnvio(filtrada);
-    }
-
-    function renderizarHistoricoCompletoEnvio(lista) {
-      const container = document.getElementById('historicoEnviosCompleto');
-      if (!lista.length) {
-        container.innerHTML = '<p class="historico-vazio">Nenhum envio encontrado com os filtros aplicados.</p>';
-        return;
-      }
-      container.innerHTML = lista.map(e => `
-        <div class="pendencia-linha" style="border-left-color:#166534;">
-          <div class="pendencia-resumo" style="cursor:default;">
-            <div class="pendencia-resumo-info">
-              <strong>Pedido ${e.NUM_PEDIDO || '—'}</strong>
-              <span>${e.CLIENTE || '—'}</span>
-              <span>${formatarData(e.DATA)}</span>
-              <span>${e.CANAL_VENDA || '—'}</span>
-            </div>
-            <span class="pendencia-badge" style="background:#D1FAE5;border-color:#6EE7B7;color:#065F46;">Envio</span>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function aplicarFiltrosRecebidos() {
-      const termoBusca = document.getElementById('filtroRecebidosBusca').value.toLowerCase().trim();
-      const dataInicio = document.getElementById('filtroRecebidosDataInicio').value;
-      const dataFim    = document.getElementById('filtroRecebidosDataFim').value;
-      const canal      = document.getElementById('filtroRecebidosCanal').value;
-
-      let filtrada = listaRecebidosCompleta.filter(r => {
-        const dataRegistro = new Date(r.DATA);
-        const dataInicioObj = dataInicio ? new Date(dataInicio) : null;
-        const dataFimObj    = dataFim    ? new Date(dataFim)    : null;
-
-        // Ajuste para considerar o dia inteiro na data final
-        if (dataFimObj) dataFimObj.setDate(dataFimObj.getDate() + 1);
-
-        const matchBusca = termoBusca === '' ||
-          (r.NUM_PEDIDO    || '').toLowerCase().includes(termoBusca) ||
-          (r.NOME_CLIENTE  || '').toLowerCase().includes(termoBusca) ||
-          (r.TELEFONE      || '').toLowerCase().includes(termoBusca);
-
-        const matchData = (!dataInicioObj || dataRegistro >= dataInicioObj) &&
-                          (!dataFimObj    || dataRegistro < dataFimObj);
-
-        const matchCanal = canal === '' || r.CANAL_VENDA === canal;
-
-        return matchBusca && matchData && matchCanal;
-      });
-
-      renderizarHistoricoCompletoRecebidos(filtrada);
-    }
-
-    function renderizarHistoricoCompletoRecebidos(lista) {
-      const container = document.getElementById('historicoRecebidosCompleto');
-      if (!lista.length) {
-        container.innerHTML = '<p class="historico-vazio">Nenhum recebido encontrado com os filtros aplicados.</p>';
-        return;
-      }
-      container.innerHTML = lista.map(r => `
-        <div class="pendencia-linha" style="border-left-color:#059669;">
-          <div class="pendencia-resumo" style="cursor:default;">
-            <div class="pendencia-resumo-info">
-              <strong>Pedido ${r.NUM_PEDIDO || '—'}</strong>
-              <span>${r.NOME_CLIENTE || '—'}</span>
-              <span>${formatarData(r.DATA)}</span>
-              <span>${r.CANAL_VENDA || '—'}</span>
-            </div>
-            <span class="pendencia-badge" style="background:#D1FAE5;border-color:#6EE7B7;color:#065F46;">Recebido</span>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    /* ===== INIT (AJUSTE) ===== */
-    window.addEventListener('DOMContentLoaded', () => {
-      atualizarBadgePendencias();
-      renderizarHistorico('envio');
-      renderizarHistorico('reembolso');
-      renderizarHistorico('recebidos');
-
-      // Carregar dados completos para os filtros quando as seções forem ativadas
-      document.getElementById('mainNav').addEventListener('click', (event) => {
-        const target = event.target;
-        if (target.tagName === 'BUTTON') {
-          const sectionId = target.getAttribute('onclick').match(/'([^']+)'/)[1];
-          if (sectionId === 'envio') {
-            carregarDadosParaFiltros('envio');
-          } else if (sectionId === 'recebidos') {
-            carregarDadosParaFiltros('recebidos');
-          }
-        }
-      });
-
-      // Carregar dados para a seção ativa inicialmente (se for Envio ou Recebidos)
-      const activeSectionId = document.querySelector('.section.active').id;
-      if (activeSectionId === 'envio') {
-        carregarDadosParaFiltros('envio');
-      } else if (activeSectionId === 'recebidos') {
-        carregarDadosParaFiltros('recebidos');
-      }
-    });
-  </script>
+  });
+</script>
 </body>
 </html>
