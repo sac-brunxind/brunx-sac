@@ -509,6 +509,9 @@
   </div>
 </div>
 
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfafNFGUPJnKaSgwL6URt5FMeqtC6Svjgz5G1EEv3WkdiMMzrV_jRXmCorvRAa9UzkBQ/exec';
+
 /* ===== NAVEGAÇÃO ===== */
 function showSection(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -571,6 +574,7 @@ function showAlert(id, msg) {
 
 function formatarData(val) {
   if (!val) return '—';
+  // CORREÇÃO AQUI: Expressão regular em uma única linha
   if (/
 ^
 \d{2}\/\d{2}\/\d{4}
@@ -1190,7 +1194,6 @@ document.getElementById('btnConfirmarResolucao').addEventListener('click', () =>
     confirmarResolucao(
       pendenciaParaResolver.idx,
       pendenciaParaResolver.linha,
-      pendenciaParaResolver.execucao, // Removido, não é mais necessário
       pendenciaParaResolver.responsavel,
       pendenciaParaResolver.obsResolver
     );
@@ -1475,8 +1478,6 @@ window.addEventListener('DOMContentLoaded', () => {
     carregarDadosParaFiltros('recebidos');
   }
 });
-                       <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfafNFGUPJnKaSgwL6URt5FMeqtC6Svjgz5G1EEv3WkdiMMzrV_jRXmCorvRAa9UzkBQ/exec';
 </script>
 </body>
 </html>
