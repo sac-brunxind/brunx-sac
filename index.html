@@ -19,10 +19,6 @@
   header { background: var(--white); border-bottom: 3px solid var(--red); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow); z-index: 100; }
   header img { height: 42px; width: auto; }
   .header-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-mid); }
-  .header-user { font-size: 0.8rem; color: var(--gray-mid); display: flex; align-items: center; gap: 0.5rem; }
-  .header-user span { font-weight: 700; color: var(--black); }
-  .btn-logout { background: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.3rem 0.7rem; font-size: 0.75rem; cursor: pointer; color: var(--gray-mid); transition: all 0.2s; }
-  .btn-logout:hover { border-color: var(--red); color: var(--red); }
 
   nav { background: var(--white); border-bottom: 1px solid var(--border); display: flex; padding: 0 2rem; overflow-x: auto; z-index: 99; flex-shrink: 0; }
   nav button { background: none; border: none; border-bottom: 3px solid transparent; padding: 1rem 1.5rem; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gray-mid); cursor: pointer; transition: all 0.2s; white-space: nowrap; }
@@ -63,6 +59,8 @@
   .btn-outline:hover { border-color: var(--red); color: var(--red); }
   .btn-success { background: #166534; color: var(--white); }
   .btn-success:hover { background: #14532d; transform: translateY(-1px); }
+  .btn-warning { background: #B45309; color: var(--white); }
+  .btn-warning:hover { background: #92400E; transform: translateY(-1px); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
   .form-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border); }
@@ -72,64 +70,70 @@
   .alert-error   { background: #FFF0F0; border: 1px solid #FECACA; color: #991B1B; }
   .alert-warning { background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; }
 
+  /* PENDÊNCIAS */
+  .busca-wrap { margin-bottom: 1.25rem; }
+  .busca-wrap input { padding: 0.6rem 0.9rem; border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; width: 100%; }
+  .busca-wrap input:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(170,0,0,0.08); }
+
   .pendencias-vazio { text-align: center; padding: 3rem 2rem; color: var(--gray-mid); }
   .pendencias-vazio .icone { font-size: 3rem; margin-bottom: 1rem; display: block; }
   .pendencias-vazio h3 { font-size: 1rem; font-weight: 700; color: var(--black); margin-bottom: 0.5rem; }
-  .pendencias-vazio p { font-size: 0.85rem; }
-  .pendencia-card { background: var(--white); border: 1px solid var(--border); border-left: 4px solid #F59E0B; border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1rem; transition: box-shadow 0.2s; }
-  .pendencia-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
-  .pendencia-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
-  .pendencia-header h3 { font-size: 0.9rem; font-weight: 700; color: var(--black); }
-  .pendencia-badge { background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.25rem 0.65rem; border-radius: 999px; }
+
+  .pendencia-linha { background: var(--white); border: 1px solid var(--border); border-left: 4px solid #F59E0B; border-radius: var(--radius); margin-bottom: 0.5rem; overflow: hidden; transition: box-shadow 0.2s; }
+  .pendencia-linha:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+
+  .pendencia-resumo { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.25rem; cursor: pointer; gap: 1rem; user-select: none; }
+  .pendencia-resumo-info { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+  .pendencia-resumo-info span { font-size: 0.82rem; color: var(--gray-dark); }
+  .pendencia-resumo-info strong { font-size: 0.85rem; color: var(--black); font-weight: 700; }
+  .pendencia-badge { background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 999px; white-space: nowrap; }
+  .pendencia-chevron { font-size: 0.75rem; color: var(--gray-mid); transition: transform 0.2s; flex-shrink: 0; }
+  .pendencia-linha.aberta .pendencia-chevron { transform: rotate(180deg); }
+
+  .pendencia-corpo { display: none; padding: 1.25rem; border-top: 1px solid var(--border); background: var(--gray-light); }
+  .pendencia-linha.aberta .pendencia-corpo { display: block; }
+
   .pendencia-infos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
   .pendencia-info-item { display: flex; flex-direction: column; gap: 0.2rem; }
   .pendencia-info-item span:first-child { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-mid); }
   .pendencia-info-item span:last-child { font-size: 0.85rem; color: var(--black); font-weight: 500; }
-  .pendencia-resolver { background: var(--gray-light); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; display: none; margin-top: 1rem; }
+
+  .pendencia-editar { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; display: none; margin-bottom: 1rem; }
+  .pendencia-editar.aberto { display: block; }
+  .pendencia-editar h4 { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-dark); margin-bottom: 0.75rem; }
+  .editar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+  .pendencia-resolver { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; display: none; margin-bottom: 1rem; }
   .pendencia-resolver.aberto { display: block; }
   .pendencia-resolver h4 { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-dark); margin-bottom: 0.75rem; }
   .resolver-row { display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap; }
   .resolver-row .form-group { flex: 1; min-width: 160px; }
-  .pendencia-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
 
-  .dashboard-controls { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end; margin-bottom: 1.5rem; }
-  .dashboard-controls .form-group { flex: 1; min-width: 140px; }
-  .dashboard-controls .btn { align-self: flex-end; }
-  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-  .chart-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem; }
-  .chart-card h3 { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-mid); margin-bottom: 1rem; }
-
-  #loginOverlay { position: fixed; inset: 0; background: var(--gray-light); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-  #loginOverlay.hidden { display: none; }
-  .login-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 8px 32px rgba(0,0,0,0.12); padding: 2.5rem 2rem; width: 100%; max-width: 380px; }
-  .login-card .logo-wrap { text-align: center; margin-bottom: 1.75rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
-  .login-card .logo-wrap img { height: 36px; }
-  .login-card h2 { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-mid); text-align: center; margin-bottom: 1.5rem; }
-  .login-card form { gap: 1rem; }
-  .login-error { background: #FFF0F0; border: 1px solid #FECACA; color: #991B1B; padding: 0.6rem 0.8rem; border-radius: var(--radius); font-size: 0.82rem; font-weight: 600; text-align: center; display: none; }
-  .remember-row { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.25rem; cursor: pointer; user-select: none; }
-  .remember-row input[type="checkbox"] { display: none; }
-  .checkbox-custom { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px; background: var(--white); display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
-  .checkbox-custom svg { opacity: 0; transition: opacity 0.15s; }
-  .remember-row.checked .checkbox-custom { background: var(--black); border-color: var(--black); }
-  .remember-row.checked .checkbox-custom svg { opacity: 1; }
-  .remember-label { font-size: 0.8rem; font-weight: 500; color: var(--gray-mid); }
+  .pendencia-actions { display: flex; gap: 0.75rem; justify-content: flex-end; padding-top: 0.75rem; border-top: 1px solid var(--border); }
 
   footer { background: var(--white); border-top: 1px solid var(--border); padding: 0.75rem 2rem; text-align: center; font-size: 0.72rem; color: var(--gray-mid); letter-spacing: 0.05em; flex-shrink: 0; }
 
   @media (max-width: 640px) {
     main { padding: 1rem; }
     .form-row { grid-template-columns: 1fr; }
-    .charts-grid { grid-template-columns: 1fr; }
+    .editar-grid { grid-template-columns: 1fr; }
     .pendencia-infos { grid-template-columns: 1fr 1fr; }
     nav button { padding: 0.8rem 1rem; font-size: 0.75rem; }
     header { padding: 0.75rem 1rem; }
     .card { padding: 1.25rem; }
     .header-title { display: none; }
+    .pendencia-resumo-info { gap: 0.75rem; }
   }
 </style>
 </head>
 <body>
+
+<!--
+===========================================
+  LOGIN — DESABILITADO TEMPORARIAMENTE
+  Para reativar: descomentar este bloco
+  e reativar a lógica de login no JS
+===========================================
 
 <div id="loginOverlay">
   <div class="login-card">
@@ -158,21 +162,23 @@
     </form>
   </div>
 </div>
+-->
 
 <header>
   <img src="LOGO_BRUNX_PNG.png" alt="BRUNX">
   <span class="header-title">SAC — Sistema de Atendimento</span>
-  <div class="header-user">Olá, <span id="nomeUsuario">—</span>
-    <button class="btn-logout" onclick="fazerLogout()">Sair</button>
-  </div>
 </header>
 
 <nav id="mainNav">
   <button class="active" onclick="showSection('envio', this)">Envio</button>
   <button onclick="showSection('reembolso', this)">Reembolso</button>
   <button onclick="showSection('recebidos', this)">Recebidos</button>
-  <button onclick="showSection('pendencias', this)">Pendências <span class="nav-badge" id="navBadge"></span></button>
+  <button onclick="showSection('pendencias', this)">
+    Pendências <span class="nav-badge" id="navBadge"></span>
+  </button>
+  <!--
   <button onclick="showSection('dashboard', this)">Dashboard</button>
+  -->
 </nav>
 
 <main>
@@ -200,7 +206,7 @@
         <div class="form-row">
           <div class="form-group">
             <label>Telefone</label>
-            <input type="tel" id="e_tel" placeholder="11999999999">
+            <input type="tel" id="e_tel" placeholder="(11)91234-5678" maxlength="14" oninput="mascaraTelefone(this)">
           </div>
           <div class="form-group">
             <label>Número do Pedido</label>
@@ -336,7 +342,7 @@
         <div class="form-row">
           <div class="form-group">
             <label>Responsável pelo Frete</label>
-            <select id="rc_resp">
+            <select id="rc_resp" onchange="toggleObrigatoriedadeRecebidos()">
               <option value="">Selecione</option>
               <option>Fábrica</option>
               <option>Cliente</option>
@@ -369,7 +375,7 @@
         <div class="form-row">
           <div class="form-group">
             <label>Telefone</label>
-            <input type="tel" id="rc_tel" placeholder="11999999999">
+            <input type="tel" id="rc_tel" placeholder="(11)91234-5678" maxlength="14" oninput="mascaraTelefone(this)">
           </div>
           <div class="form-group">
             <label>Transportadora</label>
@@ -414,7 +420,7 @@
           <label>Observação <span class="opcional">(opcional)</span></label>
           <textarea id="rc_obs" placeholder="Informações adicionais"></textarea>
         </div>
-        <div class="alert alert-warning" id="msgRecebPendencia">ℹ️ Responsável em processo — registro enviado para Pendências.</div>
+        <div class="alert alert-warning" id="msgRecebPendencia">ℹ️ Registro enviado para Pendências — responsável em processo.</div>
         <div class="alert alert-success" id="msgRecebOk">✔ Registro salvo com sucesso.</div>
         <div class="alert alert-error" id="msgRecebErr"></div>
         <div class="form-actions">
@@ -429,44 +435,24 @@
   <section id="pendencias" class="section">
     <div class="card">
       <div class="card-title">Pendências em Aberto</div>
+      <div class="busca-wrap">
+        <input type="text" id="buscaPendencia" placeholder="Buscar por pedido, nome ou telefone..." oninput="filtrarPendencias()">
+      </div>
       <div id="pendenciasContainer"></div>
     </div>
   </section>
 
-  <!-- DASHBOARD -->
+  <!--
+  DASHBOARD — DESABILITADO TEMPORARIAMENTE
   <section id="dashboard" class="section">
-    <div class="card">
-      <div class="card-title">Filtros</div>
-      <div class="dashboard-controls">
-        <div class="form-group">
-          <label>Base</label>
-          <select id="filterBase">
-            <option value="todas">Todas</option>
-            <option value="envio">Envio</option>
-            <option value="reembolso">Reembolso</option>
-            <option value="recebidos">Recebidos</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Data inicial</label>
-          <input type="date" id="dateStart">
-        </div>
-        <div class="form-group">
-          <label>Data final</label>
-          <input type="date" id="dateEnd">
-        </div>
-        <button class="btn btn-primary" onclick="carregarDados()">Atualizar</button>
-        <button class="btn btn-secondary" onclick="exportarPDF()">Exportar PDF</button>
-      </div>
-    </div>
-    <div id="chartsContainer" class="charts-grid"></div>
+    ...
   </section>
+  -->
 
 </main>
 
 <footer>BRUNX Ind &nbsp;|&nbsp; Sistema de Atendimento ao Cliente &nbsp;|&nbsp; Uso interno</footer>
 
-<script src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfafNFGUPJnKaSgwL6URt5FMeqtC6Svjgz5G1EEv3WkdiMMzrV_jRXmCorvRAa9UzkBQ/exec';
 
@@ -479,6 +465,28 @@ function showSection(id, btn) {
   if (id === 'pendencias') carregarPendencias();
 }
 
+/* ===== MÁSCARA DE TELEFONE ===== */
+function mascaraTelefone(input) {
+  let v = input.value.replace(/\D/g, '');
+  if (v.length > 11) v = v.slice(0, 11);
+  if (v.length <= 2) {
+    input.value = v.length ? '(' + v : '';
+  } else if (v.length <= 7) {
+    input.value = '(' + v.slice(0, 2) + ')' + v.slice(2);
+  } else {
+    input.value = '(' + v.slice(0, 2) + ')' + v.slice(2, 7) + '-' + v.slice(7);
+  }
+}
+
+/* ===== DATA ===== */
+function dataHoje() {
+  const d = new Date();
+  const dia  = String(d.getDate()).padStart(2, '0');
+  const mes  = String(d.getMonth() + 1).padStart(2, '0');
+  const ano  = d.getFullYear();
+  return `${dia}/${mes}/${ano}`;
+}
+
 /* ===== UTILITÁRIOS ===== */
 function showAlert(id, msg) {
   const el = document.getElementById(id);
@@ -487,245 +495,34 @@ function showAlert(id, msg) {
   setTimeout(() => { el.style.display = 'none'; }, 5000);
 }
 
-function getUsuario() {
-  return sessionStorage.getItem('user') || localStorage.getItem('user') || 'desconhecido';
-}
-
 function formatarData(val) {
   if (!val) return '—';
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(val)) return val;
   const d = new Date(val);
   if (isNaN(d)) return val;
-  return d.toLocaleDateString('pt-BR');
+  const dia = String(d.getDate()).padStart(2, '0');
+  const mes = String(d.getMonth() + 1).padStart(2, '0');
+  return `${dia}/${mes}/${d.getFullYear()}`;
 }
 
-async function hashPassword(pwd) {
-  const enc = new TextEncoder();
-  const buf = await crypto.subtle.digest('SHA-256', enc.encode(pwd));
-  return Array.from(new Uint8Array(buf))
-    .map(b => ('0' + (b & 0xFF).toString(16)).slice(-2)).join('');
-}
-
-/* ===== LEMBRAR-ME ===== */
-function toggleLembrar() {
-  const cb  = document.getElementById('lembrarMe');
-  const row = document.getElementById('rememberRow');
-  cb.checked = !cb.checked;
-  row.classList.toggle('checked', cb.checked);
-}
-
-/* ===== LOGIN ===== */
-async function tentarLogin() {
-  const userRaw = document.getElementById('loginUser').value.trim();
-  const pass    = document.getElementById('loginPass').value;
-  const lembrar = document.getElementById('lembrarMe').checked;
-  const errEl   = document.getElementById('loginError');
-
-  if (!userRaw || !pass) {
-    errEl.textContent = 'Preencha usuário e senha.';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  const hash = await hashPassword(pass);
-
-  try {
-    const resp = await fetch(
-      `${SCRIPT_URL}?action=login&user=${encodeURIComponent(userRaw.toLowerCase())}&pass=${encodeURIComponent(hash)}`
-    );
-    const data = await resp.json();
-
-    if (data.ok) {
-      sessionStorage.setItem('user', userRaw);
-      if (lembrar) {
-        localStorage.setItem('user', userRaw);
-        localStorage.setItem('lembrado', 'true');
-      } else {
-        localStorage.removeItem('user');
-        localStorage.removeItem('lembrado');
-      }
-      document.getElementById('nomeUsuario').textContent = userRaw;
-      document.getElementById('loginOverlay').classList.add('hidden');
-      atualizarBadgePendencias();
+/* ===== OBRIGATORIEDADE RECEBIDOS ===== */
+function toggleObrigatoriedadeRecebidos() {
+  const resp = document.getElementById('rc_resp').value;
+  const emProcesso = resp === 'Em processo';
+  const campos = ['rc_canal','rc_pedido','rc_nome','rc_tel','rc_transp','rc_motivo'];
+  campos.forEach(id => {
+    const el = document.getElementById(id);
+    if (emProcesso) {
+      el.removeAttribute('required');
+      el.closest('.form-group').querySelector('label').style.color = '';
     } else {
-      errEl.textContent = 'Usuário ou senha incorretos.';
-      errEl.style.display = 'block';
-      setTimeout(() => { errEl.style.display = 'none'; }, 3000);
+      el.setAttribute('required', '');
     }
-  } catch(e) {
-    errEl.textContent = 'Erro de conexão. Tente novamente.';
-    errEl.style.display = 'block';
-  }
-}
-
-function fazerLogout() {
-  sessionStorage.clear();
-  localStorage.removeItem('user');
-  localStorage.removeItem('lembrado');
-  location.reload();
-}
-
-/* ===== INIT ===== */
-window.addEventListener('DOMContentLoaded', () => {
-  const userSessao = sessionStorage.getItem('user');
-  const lembrado   = localStorage.getItem('lembrado') === 'true';
-  const userSalvo  = localStorage.getItem('user');
-  const userAtivo  = userSessao || (lembrado ? userSalvo : null);
-
-  if (userAtivo) {
-    document.getElementById('nomeUsuario').textContent = userAtivo;
-    document.getElementById('loginOverlay').classList.add('hidden');
-    if (!userSessao) sessionStorage.setItem('user', userAtivo);
-    atualizarBadgePendencias();
-  } else if (userSalvo) {
-    document.getElementById('loginUser').value = userSalvo;
-    document.getElementById('lembrarMe').checked = true;
-    document.getElementById('rememberRow').classList.add('checked');
-    document.getElementById('loginPass').focus();
-  }
-
-  document.getElementById('loginPass').addEventListener('keydown', e => {
-    if (e.key === 'Enter') tentarLogin();
   });
-  document.getElementById('loginUser').addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('loginPass').focus();
-  });
-});
-
-/* ===== BADGE PENDÊNCIAS ===== */
-async function atualizarBadgePendencias() {
-  try {
-    const resp  = await fetch(`${SCRIPT_URL}?action=getPendencias`);
-    const data  = await resp.json();
-    const badge = document.getElementById('navBadge');
-    const total = (data.pendencias || []).length;
-    if (total > 0) {
-      badge.textContent = total;
-      badge.style.display = 'inline-flex';
-    } else {
-      badge.style.display = 'none';
-    }
-  } catch(e) { /* silencioso */ }
-}
-
-/* ===== PENDÊNCIAS ===== */
-async function carregarPendencias() {
-  const container = document.getElementById('pendenciasContainer');
-  container.innerHTML = '<p style="color:var(--gray-mid);font-size:.85rem;padding:1rem;">Carregando...</p>';
-  try {
-    const resp = await fetch(`${SCRIPT_URL}?action=getPendencias`);
-    const data = await resp.json();
-    renderizarPendencias(data.pendencias || []);
-  } catch(e) {
-    container.innerHTML = '<p style="color:var(--red);font-size:.85rem;padding:1rem;">Erro ao carregar pendências.</p>';
-  }
-}
-
-function renderizarPendencias(lista) {
-  const container = document.getElementById('pendenciasContainer');
-  const badge     = document.getElementById('navBadge');
-
-  if (!lista.length) {
-    badge.style.display = 'none';
-    container.innerHTML = `
-      <div class="pendencias-vazio">
-        <span class="icone">✅</span>
-        <h3>Nenhuma pendência em aberto</h3>
-        <p>Todos os registros com frete definido já foram processados.</p>
-      </div>`;
-    return;
-  }
-
-  badge.textContent = lista.length;
-  badge.style.display = 'inline-flex';
-
-  container.innerHTML = lista.map((p, idx) => `
-    <div class="pendencia-card" id="pcard-${idx}">
-      <div class="pendencia-header">
-        <h3>Pedido ${p.NUM_PEDIDO || '—'} — ${p.NOME_CLIENTE || '—'}</h3>
-        <span class="pendencia-badge">Em Processo</span>
-      </div>
-      <div class="pendencia-infos">
-        <div class="pendencia-info-item"><span>Data</span><span>${formatarData(p.DATA)}</span></div>
-        <div class="pendencia-info-item"><span>Canal</span><span>${p.CANAL_VENDA || '—'}</span></div>
-        <div class="pendencia-info-item"><span>Telefone</span><span>${p.TELEFONE || '—'}</span></div>
-        <div class="pendencia-info-item"><span>Transportadora</span><span>${p.TRANSPORTADORA || '—'}</span></div>
-        <div class="pendencia-info-item"><span>Motivo da Troca</span><span>${p.MOTIVO_TROCA || '—'}</span></div>
-        <div class="pendencia-info-item"><span>Produto Correto?</span><span>${p.PRODUTO_CORRETO || '—'}</span></div>
-        <div class="pendencia-info-item"><span>Peças Recebidas</span><span>${p.PRODUTOS_RECEBIDOS || '—'}</span></div>
-        <div class="pendencia-info-item"><span>Registrado por</span><span>${p.USUARIO || '—'}</span></div>
-        ${p.OBSERVACAO ? `<div class="pendencia-info-item"><span>Observação</span><span>${p.OBSERVACAO}</span></div>` : ''}
-      </div>
-      <div class="pendencia-resolver" id="resolver-${idx}">
-        <h4>Definir responsável pelo frete</h4>
-        <div class="resolver-row">
-          <div class="form-group">
-            <label>Responsável</label>
-            <select id="resp-${idx}">
-              <option value="">Selecione</option>
-              <option>Fábrica</option>
-              <option>Cliente</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Observação <span class="opcional">(opcional)</span></label>
-            <input type="text" id="obs-${idx}" placeholder="Complemento opcional">
-          </div>
-          <button class="btn btn-success" onclick="confirmarResolucao(${idx}, ${p._linha})">Confirmar</button>
-        </div>
-        <div class="alert alert-error" id="erroResolver-${idx}"></div>
-      </div>
-      <div class="pendencia-actions">
-        <button class="btn btn-outline" onclick="toggleResolver(${idx})">Resolver Pendência</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-function toggleResolver(idx) {
-  document.getElementById(`resolver-${idx}`).classList.toggle('aberto');
-}
-
-async function confirmarResolucao(idx, linha) {
-  const responsavel = document.getElementById(`resp-${idx}`).value;
-  const observacao  = document.getElementById(`obs-${idx}`).value.trim();
-  const errEl       = document.getElementById(`erroResolver-${idx}`);
-
-  if (!responsavel) {
-    errEl.textContent = 'Selecione o responsável antes de confirmar.';
-    errEl.style.display = 'block';
-    setTimeout(() => { errEl.style.display = 'none'; }, 4000);
-    return;
-  }
-
-  try {
-    const resp = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'resolverPendencia',
-        usuario: getUsuario(),
-        linha,
-        responsavel,
-        observacao
-      })
-    });
-    const result = await resp.json();
-
-    if (result.ok) {
-      const card = document.getElementById(`pcard-${idx}`);
-      card.style.transition = 'opacity 0.4s';
-      card.style.opacity = '0';
-      setTimeout(() => {
-        card.remove();
-        if (!document.querySelectorAll('.pendencia-card').length) renderizarPendencias([]);
-        atualizarBadgePendencias();
-      }, 400);
-    } else {
-      errEl.textContent = 'Erro: ' + (result.error || 'desconhecido');
-      errEl.style.display = 'block';
-    }
-  } catch(e) {
-    errEl.textContent = 'Erro de conexão.';
-    errEl.style.display = 'block';
+  if (emProcesso) {
+    document.getElementById('rc_correto').value = '';
+    document.getElementById('btnSim').className = '';
+    document.getElementById('btnNao').className = '';
   }
 }
 
@@ -748,6 +545,22 @@ async function verificarPedidoAoSair(numPedido) {
   } catch(e) { /* silencioso */ }
 }
 
+/* ===== BADGE PENDÊNCIAS ===== */
+async function atualizarBadgePendencias() {
+  try {
+    const resp  = await fetch(`${SCRIPT_URL}?action=getPendencias`);
+    const data  = await resp.json();
+    const badge = document.getElementById('navBadge');
+    const total = (data.pendencias || []).length;
+    if (total > 0) {
+      badge.textContent = total;
+      badge.style.display = 'inline-flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  } catch(e) { /* silencioso */ }
+}
+
 /* ===== ENVIO ===== */
 let envioEmAndamento = false;
 
@@ -764,7 +577,7 @@ async function submitEnvio() {
 
   const payload = {
     action:     'addEnvio',
-    usuario:    getUsuario(),
+    data:       dataHoje(),
     canalVenda: document.getElementById('e_canal').value,
     cliente:    document.getElementById('e_cliente').value.trim(),
     telefone:   document.getElementById('e_tel').value.trim(),
@@ -787,9 +600,7 @@ async function submitEnvio() {
   btn.textContent = 'Verificando...';
 
   try {
-    const dup = await fetch(
-      `${SCRIPT_URL}?action=checkPedido&num=${encodeURIComponent(payload.numPedido)}`
-    );
+    const dup = await fetch(`${SCRIPT_URL}?action=checkPedido&num=${encodeURIComponent(payload.numPedido)}`);
     const dupData = await dup.json();
 
     if (dupData.exists) {
@@ -823,7 +634,7 @@ async function submitEnvio() {
 async function submitReembolso() {
   const payload = {
     action:        'addReembolso',
-    usuario:       getUsuario(),
+    data:          dataHoje(),
     cliente:       document.getElementById('r_cliente').value.trim(),
     loja:          document.getElementById('r_loja').value,
     tipoReembolso: document.getElementById('r_tipo').value,
@@ -880,10 +691,13 @@ function limparRecebidos() {
 }
 
 async function submitRecebidos() {
+  const resp_val = document.getElementById('rc_resp').value;
+  const emProcesso = resp_val === 'Em processo';
+
   const payload = {
-    action:            'addRecebidos',
-    usuario:           getUsuario(),
-    responsavel:       document.getElementById('rc_resp').value,
+    action:            emProcesso ? 'addPendencia' : 'addRecebidos',
+    data:              dataHoje(),
+    responsavel:       resp_val,
     canalVenda:        document.getElementById('rc_canal').value,
     numPedido:         document.getElementById('rc_pedido').value.trim(),
     nomeCliente:       document.getElementById('rc_nome').value.trim(),
@@ -895,11 +709,13 @@ async function submitRecebidos() {
     observacao:        document.getElementById('rc_obs').value.trim()
   };
 
-  const obrigatorios = ['responsavel','canalVenda','numPedido','nomeCliente','telefone',
-                        'transportadora','motivoTroca','produtoCorreto','produtosRecebidos'];
-  if (obrigatorios.some(k => !payload[k])) {
-    showAlert('msgRecebErr', 'Preencha todos os campos obrigatórios.');
-    return;
+  if (!emProcesso) {
+    const obrigatorios = ['responsavel','canalVenda','numPedido','nomeCliente','telefone',
+                          'transportadora','motivoTroca','produtoCorreto','produtosRecebidos'];
+    if (obrigatorios.some(k => !payload[k])) {
+      showAlert('msgRecebErr', 'Preencha todos os campos obrigatórios.');
+      return;
+    }
   }
 
   try {
@@ -907,7 +723,7 @@ async function submitRecebidos() {
     const result = await resp.json();
 
     if (result.ok) {
-      if (payload.responsavel === 'Em processo') {
+      if (emProcesso) {
         showAlert('msgRecebPendencia');
         atualizarBadgePendencias();
       } else {
@@ -922,101 +738,299 @@ async function submitRecebidos() {
   }
 }
 
-/* ===== DASHBOARD ===== */
-google.charts.load('current', { packages: ['corechart'] });
+/* ===== PENDÊNCIAS ===== */
+let listaPendenciasGlobal = [];
 
-async function carregarDados() {
-  const base  = document.getElementById('filterBase').value;
-  const start = document.getElementById('dateStart').value;
-  const end   = document.getElementById('dateEnd').value;
+async function carregarPendencias() {
+  const container = document.getElementById('pendenciasContainer');
+  container.innerHTML = '<p style="color:var(--gray-mid);font-size:.85rem;padding:1rem;">Carregando...</p>';
   try {
-    const resp = await fetch(
-      `${SCRIPT_URL}?action=getDashboard&base=${base}&start=${start}&end=${end}`
-    );
+    const resp = await fetch(`${SCRIPT_URL}?action=getPendencias`);
     const data = await resp.json();
-    desenharGraficos(data);
+    listaPendenciasGlobal = data.pendencias || [];
+    renderizarPendencias(listaPendenciasGlobal);
   } catch(e) {
-    document.getElementById('chartsContainer').innerHTML =
-      '<p style="color:var(--red);font-size:.85rem;padding:1rem;">Erro ao carregar dados.</p>';
+    container.innerHTML = '<p style="color:var(--red);font-size:.85rem;padding:1rem;">Erro ao carregar pendências.</p>';
   }
 }
 
-function criarChartCard(titulo) {
-  const div = document.createElement('div');
-  div.className = 'chart-card';
-  div.innerHTML = `<h3>${titulo}</h3><div class="chart-inner" style="height:220px;"></div>`;
-  return div;
+function filtrarPendencias() {
+  const termo = document.getElementById('buscaPendencia').value.toLowerCase().trim();
+  if (!termo) {
+    renderizarPendencias(listaPendenciasGlobal);
+    return;
+  }
+  const filtrada = listaPendenciasGlobal.filter(p => {
+    return (
+      (p.NUM_PEDIDO    || '').toLowerCase().includes(termo) ||
+      (p.NOME_CLIENTE  || '').toLowerCase().includes(termo) ||
+      (p.TELEFONE      || '').toLowerCase().includes(termo)
+    );
+  });
+  renderizarPendencias(filtrada);
 }
 
-function chartOptions() {
-  return {
-    legend: { position: 'bottom', textStyle: { fontSize: 11 } },
-    chartArea: { width: '90%', height: '75%' },
-    colors: ['#AA0000','#111111','#666666','#DDDDDD','#880000'],
-    fontName: 'Segoe UI'
+function renderizarPendencias(lista) {
+  const container = document.getElementById('pendenciasContainer');
+  const badge     = document.getElementById('navBadge');
+
+  if (!lista.length) {
+    badge.style.display = 'none';
+    container.innerHTML = `
+      <div class="pendencias-vazio">
+        <span class="icone">✅</span>
+        <h3>Nenhuma pendência encontrada</h3>
+        <p>Todos os registros foram processados ou nenhum resultado para a busca.</p>
+      </div>`;
+    return;
+  }
+
+  badge.textContent = listaPendenciasGlobal.length;
+  badge.style.display = 'inline-flex';
+
+  container.innerHTML = lista.map((p, idx) => `
+    <div class="pendencia-linha" id="pcard-${idx}">
+      <div class="pendencia-resumo" onclick="toggleCard(${idx})">
+        <div class="pendencia-resumo-info">
+          <strong>Pedido ${p.NUM_PEDIDO || '—'}</strong>
+          <span>${p.NOME_CLIENTE || '—'}</span>
+          <span>${formatarData(p.DATA)}</span>
+          <span>${p.TELEFONE || '—'}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <span class="pendencia-badge">Em Processo</span>
+          <span class="pendencia-chevron">▼</span>
+        </div>
+      </div>
+
+      <div class="pendencia-corpo">
+        <div class="pendencia-infos" id="infos-view-${idx}">
+          <div class="pendencia-info-item"><span>Canal</span><span>${p.CANAL_VENDA || '—'}</span></div>
+          <div class="pendencia-info-item"><span>Transportadora</span><span>${p.TRANSPORTADORA || '—'}</span></div>
+          <div class="pendencia-info-item"><span>Motivo da Troca</span><span>${p.MOTIVO_TROCA || '—'}</span></div>
+          <div class="pendencia-info-item"><span>Produto Correto?</span><span>${p.PRODUTO_CORRETO || '—'}</span></div>
+          <div class="pendencia-info-item"><span>Peças Recebidas</span><span>${p.PRODUTOS_RECEBIDOS || '—'}</span></div>
+          <div class="pendencia-info-item"><span>Observação</span><span>${p.OBSERVACAO || '—'}</span></div>
+        </div>
+
+        <!-- EDIÇÃO -->
+        <div class="pendencia-editar" id="editar-${idx}">
+          <h4>Editar informações</h4>
+          <div class="editar-grid">
+            <div class="form-group">
+              <label>Número do Pedido</label>
+              <input type="text" id="ed_pedido_${idx}" value="${p.NUM_PEDIDO || ''}">
+            </div>
+            <div class="form-group">
+              <label>Nome do Cliente</label>
+              <input type="text" id="ed_nome_${idx}" value="${p.NOME_CLIENTE || ''}">
+            </div>
+            <div class="form-group">
+              <label>Telefone</label>
+              <input type="tel" id="ed_tel_${idx}" value="${p.TELEFONE || ''}" maxlength="14" oninput="mascaraTelefone(this)">
+            </div>
+            <div class="form-group">
+              <label>Canal de Venda</label>
+              <select id="ed_canal_${idx}">
+                <option value="">Selecione</option>
+                ${['Brunx Varejo','Brunx Atacado','Liso&Co','Mercado Livre Brunx','Mercado Livre VST','Mercado Livre Over']
+                  .map(o => `<option${p.CANAL_VENDA === o ? ' selected' : ''}>${o}</option>`).join('')}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Transportadora</label>
+              <select id="ed_transp_${idx}">
+                <option value="">Selecione</option>
+                ${['PAC / Sedex','Loggi','Jadlog','J&T','Buslog','Gol','Mercado Livre']
+                  .map(o => `<option${p.TRANSPORTADORA === o ? ' selected' : ''}>${o}</option>`).join('')}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Motivo da Troca</label>
+              <select id="ed_motivo_${idx}">
+                <option value="">Selecione</option>
+                ${['Troca de tamanho','Envio errado','Peças danificadas','Não gostou das peças','Problema transportadora']
+                  .map(o => `<option${p.MOTIVO_TROCA === o ? ' selected' : ''}>${o}</option>`).join('')}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Produto Correto?</label>
+              <select id="ed_correto_${idx}">
+                <option value="">Selecione</option>
+                <option${p.PRODUTO_CORRETO === 'Sim' ? ' selected' : ''}>Sim</option>
+                <option${p.PRODUTO_CORRETO === 'Não' ? ' selected' : ''}>Não</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Peças Recebidas</label>
+              <input type="text" id="ed_pecas_${idx}" value="${p.PRODUTOS_RECEBIDOS || ''}">
+            </div>
+            <div class="form-group" style="grid-column:1/-1;">
+              <label>Observação</label>
+              <input type="text" id="ed_obs_${idx}" value="${p.OBSERVACAO || ''}">
+            </div>
+          </div>
+          <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.75rem;">
+            <button class="btn btn-outline" onclick="cancelarEdicao(${idx})">Cancelar</button>
+            <button class="btn btn-warning" onclick="salvarEdicaoLocal(${idx})">Salvar Edição</button>
+          </div>
+        </div>
+
+        <!-- RESOLVER -->
+        <div class="pendencia-resolver" id="resolver-${idx}">
+          <h4>Definir responsável pelo frete</h4>
+          <div class="resolver-row">
+            <div class="form-group">
+              <label>Responsável</label>
+              <select id="resp-${idx}">
+                <option value="">Selecione</option>
+                <option>Fábrica</option>
+                <option>Cliente</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Observação <span class="opcional">(opcional)</span></label>
+              <input type="text" id="obs-${idx}" placeholder="Complemento opcional">
+            </div>
+            <button class="btn btn-success" onclick="confirmarResolucao(${idx}, ${p._linha})">Confirmar</button>
+          </div>
+          <div class="alert alert-error" id="erroResolver-${idx}"></div>
+        </div>
+
+        <div class="pendencia-actions">
+          <button class="btn btn-outline" onclick="toggleEditar(${idx})">Editar</button>
+          <button class="btn btn-primary" onclick="toggleResolver(${idx})">Resolver Pendência</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleCard(idx) {
+  document.getElementById(`pcard-${idx}`).classList.toggle('aberta');
+}
+
+function toggleEditar(idx) {
+  const ed = document.getElementById(`editar-${idx}`);
+  const rs = document.getElementById(`resolver-${idx}`);
+  rs.classList.remove('aberto');
+  ed.classList.toggle('aberto');
+}
+
+function cancelarEdicao(idx) {
+  document.getElementById(`editar-${idx}`).classList.remove('aberto');
+}
+
+function salvarEdicaoLocal(idx) {
+  const p = listaPendenciasGlobal.find((_, i) => i === idx);
+  if (!p) return;
+  p.NUM_PEDIDO         = document.getElementById(`ed_pedido_${idx}`).value.trim();
+  p.NOME_CLIENTE       = document.getElementById(`ed_nome_${idx}`).value.trim();
+  p.TELEFONE           = document.getElementById(`ed_tel_${idx}`).value.trim();
+  p.CANAL_VENDA        = document.getElementById(`ed_canal_${idx}`).value;
+  p.TRANSPORTADORA     = document.getElementById(`ed_transp_${idx}`).value;
+  p.MOTIVO_TROCA       = document.getElementById(`ed_motivo_${idx}`).value;
+  p.PRODUTO_CORRETO    = document.getElementById(`ed_correto_${idx}`).value;
+  p.PRODUTOS_RECEBIDOS = document.getElementById(`ed_pecas_${idx}`).value.trim();
+  p.OBSERVACAO         = document.getElementById(`ed_obs_${idx}`).value.trim();
+
+  document.getElementById(`editar-${idx}`).classList.remove('aberto');
+  renderizarPendencias(listaPendenciasGlobal);
+  setTimeout(() => {
+    document.getElementById(`pcard-${idx}`).classList.add('aberta');
+  }, 50);
+}
+
+function toggleResolver(idx) {
+  const rs = document.getElementById(`resolver-${idx}`);
+  const ed = document.getElementById(`editar-${idx}`);
+  ed.classList.remove('aberto');
+  rs.classList.toggle('aberto');
+}
+
+async function confirmarResolucao(idx, linha) {
+  const p = listaPendenciasGlobal.find((_, i) => i === idx);
+  if (!p) return;
+
+  const responsavel = document.getElementById(`resp-${idx}`).value;
+  const obsResolver = document.getElementById(`obs-${idx}`).value.trim();
+  const errEl       = document.getElementById(`erroResolver-${idx}`);
+
+  if (!responsavel) {
+    errEl.textContent = 'Selecione o responsável antes de confirmar.';
+    errEl.style.display = 'block';
+    setTimeout(() => { errEl.style.display = 'none'; }, 4000);
+    return;
+  }
+
+  const obrigatorios = {
+    'Número do Pedido':      p.NUM_PEDIDO,
+    'Nome do Cliente':       p.NOME_CLIENTE,
+    'Telefone':              p.TELEFONE,
+    'Canal de Venda':        p.CANAL_VENDA,
+    'Transportadora':        p.TRANSPORTADORA,
+    'Motivo da Troca':       p.MOTIVO_TROCA,
+    'Produto Correto?':      p.PRODUTO_CORRETO,
+    'Peças Recebidas':       p.PRODUTOS_RECEBIDOS
   };
-}
 
-function desenharGraficos(data) {
-  const container = document.getElementById('chartsContainer');
-  container.innerHTML = '';
+  const faltando = Object.entries(obrigatorios)
+    .filter(([, v]) => !v || !String(v).trim())
+    .map(([k]) => k);
 
-  if (data.envio && data.envio.length) {
-    const div = criarChartCard('Envios por Canal');
-    container.appendChild(div);
-    const tabela = new google.visualization.DataTable();
-    tabela.addColumn('string', 'Canal');
-    tabela.addColumn('number', 'Qtd');
-    const cnt = {};
-    data.envio.forEach(r => { const c = r['CANAL_VENDA'] || '—'; cnt[c] = (cnt[c]||0)+1; });
-    Object.entries(cnt).forEach(([k,v]) => tabela.addRow([k,v]));
-    new google.visualization.PieChart(div.querySelector('.chart-inner')).draw(tabela, chartOptions());
+  if (faltando.length) {
+    errEl.textContent = `Preencha os campos obrigatórios antes de resolver: ${faltando.join(', ')}.`;
+    errEl.style.display = 'block';
+    setTimeout(() => { errEl.style.display = 'none'; }, 6000);
+    return;
   }
 
-  if (data.envio && data.envio.length) {
-    const div = criarChartCard('Envios por Tipo de Falha');
-    container.appendChild(div);
-    const tabela = new google.visualization.DataTable();
-    tabela.addColumn('string', 'Falha');
-    tabela.addColumn('number', 'Qtd');
-    const cnt = {};
-    data.envio.forEach(r => { const c = r['TIPO_FALHA'] || '—'; cnt[c] = (cnt[c]||0)+1; });
-    Object.entries(cnt).forEach(([k,v]) => tabela.addRow([k,v]));
-    new google.visualization.BarChart(div.querySelector('.chart-inner')).draw(tabela, chartOptions());
-  }
+  const payload = {
+    action:            'resolverPendencia',
+    data:              p.DATA || dataHoje(),
+    linha:             linha,
+    responsavel:       responsavel,
+    canalVenda:        p.CANAL_VENDA,
+    numPedido:         p.NUM_PEDIDO,
+    nomeCliente:       p.NOME_CLIENTE,
+    telefone:          p.TELEFONE,
+    transportadora:    p.TRANSPORTADORA,
+    motivoTroca:       p.MOTIVO_TROCA,
+    produtoCorreto:    p.PRODUTO_CORRETO,
+    produtosRecebidos: p.PRODUTOS_RECEBIDOS,
+    observacao:        obsResolver || p.OBSERVACAO || ''
+  };
 
-  if (data.reembolso && data.reembolso.length) {
-    const div = criarChartCard('Reembolsos por Motivo');
-    container.appendChild(div);
-    const tabela = new google.visualization.DataTable();
-    tabela.addColumn('string', 'Motivo');
-    tabela.addColumn('number', 'Qtd');
-    const cnt = {};
-    data.reembolso.forEach(r => { const c = r['MOTIVO'] || '—'; cnt[c] = (cnt[c]||0)+1; });
-    Object.entries(cnt).forEach(([k,v]) => tabela.addRow([k,v]));
-    new google.visualization.BarChart(div.querySelector('.chart-inner')).draw(tabela, chartOptions());
-  }
+  try {
+    const resp   = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    const result = await resp.json();
 
-  if (data.recebidos && data.recebidos.length) {
-    const div = criarChartCard('Recebidos por Transportadora');
-    container.appendChild(div);
-    const tabela = new google.visualization.DataTable();
-    tabela.addColumn('string', 'Transportadora');
-    tabela.addColumn('number', 'Qtd');
-    const cnt = {};
-    data.recebidos.forEach(r => { const c = r['TRANSPORTADORA'] || '—'; cnt[c] = (cnt[c]||0)+1; });
-    Object.entries(cnt).forEach(([k,v]) => tabela.addRow([k,v]));
-    new google.visualization.PieChart(div.querySelector('.chart-inner')).draw(tabela, chartOptions());
-  }
-
-  if (!container.children.length) {
-    container.innerHTML = '<p style="color:var(--gray-mid);font-size:.85rem;padding:1rem;grid-column:1/-1;">Nenhum dado encontrado para o período selecionado.</p>';
+    if (result.ok) {
+      const card = document.getElementById(`pcard-${idx}`);
+      card.style.transition = 'opacity 0.4s';
+      card.style.opacity = '0';
+      setTimeout(() => {
+        listaPendenciasGlobal = listaPendenciasGlobal.filter((_, i) => i !== idx);
+        renderizarPendencias(listaPendenciasGlobal);
+        atualizarBadgePendencias();
+      }, 400);
+    } else {
+      errEl.textContent = 'Erro: ' + (result.error || 'desconhecido');
+      errEl.style.display = 'block';
+    }
+  } catch(e) {
+    errEl.textContent = 'Erro de conexão.';
+    errEl.style.display = 'block';
   }
 }
 
-function exportarPDF() {
-  window.print();
-}
+/* ===== INIT ===== */
+window.addEventListener('DOMContentLoaded', () => {
+  atualizarBadgePendencias();
+});
 </script>
 </body>
 </html>
