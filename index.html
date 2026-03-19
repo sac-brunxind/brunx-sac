@@ -1014,23 +1014,341 @@
             mostrarAlerta('Preencha todos os campos obrigatórios', 'error');
             return;
         }
+<script>
+    // ========== VARIÁVEIS GLOBAIS ==========
+    let usuarioLogado = 'tiago';
+    let paginaAtual = 'criar-tarefa';
+    let tarefasCarregadas = [];
 
-        // Aqui você chamará a função do Apps Script
-        console.log('Dados para criar tarefa:', dados);
+    // ========== INICIALIZAÇÃO ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        inicializar();
+    });
 
-        // Exemplo de chamada ao Apps Script (descomente quando integrar):
-        // google.script.run.withSuccessHandler(function(resultado) {
-        //     if (resultado.sucesso) {
-        //         mostrarAlerta('Tarefa criada com sucesso!', 'success');
-        //         document.getElementById('formCriarTarefa').reset();
-        //     } else {
-        //         mostrarAlerta('Erro ao criar tarefa: ' + resultado.erro, 'error');
-        //     }
-        // }).criarTarefa(dados);
+    function inicializar() {
+        // Configurar event listeners do menu
+        configurarMenuEventListeners();
 
-        mostrarAlerta('Tarefa criada com sucesso! (Modo simulado)', 'success');
-        document.getElementById('formCriarTarefa').reset();
+        // Configurar formulários
+        document.getElementById('formCriarTarefa').addEventListener('submit', criarTarefa);
+        document.getElementById('formMudarEstado').addEventListener('submit', mudarEstado);
+
+        // Carregar dados iniciais
+        carregarDadosUsuario();
     }
+
+    // ========== MENU ==========
+    function configurarMenuEventListeners() {
+        // Menu items principais
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const pagina = this.getAttribute('data-page');
+                const toggle = this.getAttribute('data-toggle');
+
+                if (pagina) {
+                    mudarPagina(pagina);
+                    document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
+                }
+
+                if (toggle) {
+                    const submenu = document.getElementById(toggle);
+                    if (submenu) {
+                        submenu.classList.toggle('show');
+                        const arrow = this.querySelector('.menu-arrow');
+                        if (arrow) {
+                            arrow.classList.toggle('open');
+                        }
+                    }
+                }
+            });
+        });
+
+        // Submenu items
+        document.querySelectorAll('.submenu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const pagina = this.getAttribute('data-page');
+                const filtro = this.getAttribute('data-filter');
+
+                if (pagina) {
+                    mudarPagina(pagina);
+
+                    // Atualizar submenu ativo
+                    document.querySelectorAll('.submenu-item').forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Carregar tarefas com filtro se houver
+                    if (filtro) {
+                        setTimeout(() => {
+                            document.getElementById('filterEstado').value = filtro;
+                            aplicarFiltros();
+                        }, 100);
+                    } else {
+                        carregarTarefas();
+                    }
+                }
+            });
+        });
+    }
+
+    // ========== NAVEGAÇÃO ==========
+    function mudarPagina(pagina) {
+        // Esconder todas as páginas
+        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+
+        // Mostrar página selecionada
+        const paginaElement = document.getElementById('page-' + pagina);
+        if (paginaElement) {
+            paginaElement.classList.remove('hidden');
+        }
+
+        paginaAtual = pagina;
+
+        // Carregar dados específicos da página
+        if (pagina === 'listar-tarefas') {
+            carregarTarefas();
+        } else if (pagina === 'dashboard') {
+            carregarDashboard();
+        }
+    }
+
+    // ========== ALERTAS ==========
+    function mostrarAlerta(mensagem, tipo = 'info') {
+        const alertId = 'alert' + tipo.charAt(0).toUpperCase() + tipo.slice(1);
+        const alertElement = document.getElementById(alertId);
+
+        if (alertElement) {
+            alertElement.textContent = mensagem;
+            alertElement.classList.add('show');
+
+            setTimeout(() => {
+                alertElement.classList.remove('show');
+            }, 5000);
+        }
+    }
+
+    // ========== USUÁRIO ==========
+    function carregarDadosUsuario() {
+        document.getElementById('userDisplay').textContent = usuarioLogado;
+        atualizarBadgeNotificacoes();
+    }
+
+    function atualizarBadgeNotificacoes() {
+        google.script.run.withSuccessHandler(function(resultado) {
+            if (resultado.sucesso) {
+                document.getElementById('badgeNotificacoes').textContent = resultado.badgeTotal || '0';
+            }
+        }).obterBadgeNotificacoes(usuarioLogado);
+    }
+
+    // ========== CRIAR TAREFA ==========
+    function criarTarefa(e) {
+        e.preventDefault();
+
+        const dados = {
+            cliente_nome: document.getElementById('clienteNome').value,
+            cliente_telefone: document.getElementById('clienteTelefone').value,
+            loja: document.getElementById('loja').value,
+            num_pedido: document.getElementById('numPedido').value,
+            tipo_tarefa: document.getElementById('tipoTarefa').value,
+            prioridade: document.getElementById('prioridade').value,
+            canal_origem: document.getElementById('canalOrigem').value,
+            descricao_resumida: document.getElementById('descricaoResumida').value,
+            observacao: document.getElementById('observacao').value
+        };
+
+        // Validar dados
+        if (!dados.cliente_nome || !dados.cliente_telefone || !dados.num_pedido) {
+            mostrarAlerta('Preencha todos os campos obrigatórios', 'error');
+            return;
+        }
+
+        // CHAMADA AO APPS SCRIPT
+        google.script.run.withSuccessHandler(function(resultado) {
+            if (resultado.sucesso) {
+                mostrarAlerta('Tarefa criada com sucesso!', 'success');
+                document.getElementById('formCriarTarefa').reset();
+                atualizarBadgeNotificacoes();
+            } else {
+                mostrarAlerta('Erro ao criar tarefa: ' + resultado.erro, 'error');
+            }
+        }).withFailureHandler(function(erro) {
+            mostrarAlerta('Erro na conexão: ' + erro, 'error');
+        }).criarTarefa(dados);
+    }
+
+    // ========== LISTAR TAREFAS ==========
+    function carregarTarefas() {
+        const tbody = document.getElementById('tabelaTarefasBody');
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;"><span class="loading"></span></td></tr>';
+
+        // CHAMADA AO APPS SCRIPT
+        google.script.run.withSuccessHandler(function(resultado) {
+            if (resultado.sucesso) {
+                tarefasCarregadas = resultado.tarefas;
+                renderizarTarefas(resultado.tarefas);
+            } else {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #999;">Erro ao carregar tarefas</td></tr>';
+            }
+        }).withFailureHandler(function(erro) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #999;">Erro na conexão</td></tr>';
+        }).listarMinhasTarefas(usuarioLogado);
+    }
+
+    function renderizarTarefas(tarefas) {
+        const tbody = document.getElementById('tabelaTarefasBody');
+
+        if (tarefas.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #999;">Nenhuma tarefa encontrada</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = tarefas.map(tarefa => `
+            <tr>
+                <td>${tarefa.id_tarefa || ''}</td>
+                <td>${tarefa.cliente_nome || ''}</td>
+                <td>${tarefa.num_pedido || ''}</td>
+                <td>${tarefa.tipo_tarefa || ''}</td>
+                <td><span class="status-badge status-${tarefa.prioridade || 'media'}">${tarefa.prioridade || 'média'}</span></td>
+                <td><span class="status-badge status-${tarefa.estado || 'pendente'}">${tarefa.estado || 'pendente'}</span></td>
+                <td>${tarefa.data_limite || ''}</td>
+                <td>
+                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="editarTarefa('${tarefa.id_tarefa}')">Editar</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function aplicarFiltros() {
+        const estado = document.getElementById('filterEstado').value;
+        const pesquisa = document.getElementById('filterPesquisa').value.toLowerCase();
+
+        let tarefasFiltradas = tarefasCarregadas;
+
+        if (estado) {
+            tarefasFiltradas = tarefasFiltradas.filter(t => t.estado === estado);
+        }
+
+        if (pesquisa) {
+            tarefasFiltradas = tarefasFiltradas.filter(t => 
+                (t.cliente_nome && t.cliente_nome.toLowerCase().includes(pesquisa)) || 
+                (t.num_pedido && t.num_pedido.toLowerCase().includes(pesquisa))
+            );
+        }
+
+        renderizarTarefas(tarefasFiltradas);
+    }
+
+    function editarTarefa(id) {
+        mostrarAlerta('Editar tarefa: ' + id, 'info');
+    }
+
+    // ========== HISTÓRICO CLIENTE ==========
+    function buscarHistorico() {
+        const telefone = document.getElementById('historicoTelefone').value;
+
+        if (!telefone) {
+            mostrarAlerta('Preencha o telefone do cliente', 'error');
+            return;
+        }
+
+        // CHAMADA AO APPS SCRIPT
+        google.script.run.withSuccessHandler(function(resultado) {
+            if (resultado.sucesso) {
+                exibirHistorico(resultado);
+            } else {
+                mostrarAlerta('Cliente não encontrado', 'error');
+            }
+        }).withFailureHandler(function(erro) {
+            mostrarAlerta('Erro na conexão: ' + erro, 'error');
+        }).buscarHistoricoCliente(telefone);
+    }
+
+    function exibirHistorico(dados) {
+        document.getElementById('nomeClienteHistorico').textContent = dados.cliente_nome || 'Cliente';
+        document.getElementById('totalTarefasHistorico').textContent = dados.totalTarefas || 0;
+        document.getElementById('totalConcluidasHistorico').textContent = dados.concluidas || 0;
+        document.getElementById('totalPendentesHistorico').textContent = dados.pendentes || 0;
+        document.getElementById('totalAtrasadasHistorico').textContent = dados.atrasadas || 0;
+
+        const tbody = document.getElementById('tabelaHistoricoBody');
+        if (dados.tarefas && dados.tarefas.length > 0) {
+            tbody.innerHTML = dados.tarefas.map(tarefa => `
+                <tr>
+                    <td>${tarefa.id_tarefa || ''}</td>
+                    <td>${tarefa.num_pedido || ''}</td>
+                    <td>${tarefa.tipo_tarefa || ''}</td>
+                    <td><span class="status-badge status-${tarefa.estado || 'pendente'}">${tarefa.estado || 'pendente'}</span></td>
+                    <td>${tarefa.data_hora_criacao || ''}</td>
+                    <td>${tarefa.data_limite || ''}</td>
+                </tr>
+            `).join('');
+        } else {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #999;">Nenhuma tarefa encontrada</td></tr>';
+        }
+
+        document.getElementById('historicoResultado').classList.remove('hidden');
+    }
+
+    // ========== MUDAR ESTADO ==========
+    function mudarEstado(e) {
+        e.preventDefault();
+
+        const id = document.getElementById('mudarEstadoId').value;
+        const novoEstado = document.getElementById('mudarEstadoNovo').value;
+        const observacao = document.getElementById('mudarEstadoObservacao').value;
+
+        if (!id || !novoEstado) {
+            mostrarAlerta('Preencha todos os campos obrigatórios', 'error');
+            return;
+        }
+
+        const dados = {
+            id_tarefa: id,
+            novo_estado: novoEstado,
+            observacao: observacao,
+            usuario: usuarioLogado
+        };
+
+        // CHAMADA AO APPS SCRIPT
+        google.script.run.withSuccessHandler(function(resultado) {
+            if (resultado.sucesso) {
+                mostrarAlerta('Estado atualizado com sucesso!', 'success');
+                document.getElementById('formMudarEstado').reset();
+                atualizarBadgeNotificacoes();
+            } else {
+                mostrarAlerta('Erro: ' + resultado.erro, 'error');
+            }
+        }).withFailureHandler(function(erro) {
+            mostrarAlerta('Erro na conexão: ' + erro, 'error');
+        }).mudarEstadoTarefa(dados);
+    }
+
+    // ========== DASHBOARD ==========
+    function carregarDashboard() {
+        // CHAMADA AO APPS SCRIPT
+        google.script.run.withSuccessHandler(function(resultado) {
+            if (resultado.sucesso) {
+                atualizarDashboard(resultado);
+            }
+        }).obterBadgeNotificacoes(usuarioLogado);
+    }
+
+    function atualizarDashboard(dados) {
+        document.getElementById('dashTotalAtivas').textContent = dados.badgeTotal || 0;
+        document.getElementById('dashTotalPendentes').textContent = dados.totalPendentes || 0;
+        document.getElementById('dashTotalEmProgresso').textContent = dados.totalEmProgresso || 0;
+        document.getElementById('dashTotalAtrasadas').textContent = dados.totalAtrasadas || 0;
+
+        if (dados.totalAtrasadas > 0) {
+            document.getElementById('dashboardTarefasAtrasadas').classList.remove('hidden');
+            // Aqui você pode adicionar a lista de tarefas atrasadas
+        } else {
+            document.getElementById('dashboardTarefasAtrasadas').classList.add('hidden');
+        }
+    }
+</script>
 
     // ========== LISTAR TAREFAS ==========
     function carregarTarefas() {
